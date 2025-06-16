@@ -5,8 +5,29 @@ import { useEffect } from "react"
 import { useRouter } from "next/navigation";
 import { LoadingPage } from "@/app/Components/notification/loading";
 import { NullPage } from "@/app/Components/notification/null";
+import Link from "next/link";
+// type item = {
+//     image :string , 
+//     name :string 
+// }
+type OrderItem = {
+    image: string;
+    name: string ; 
+    // add other properties if needed
+};
+
+type Order = {
+    _id: number;
+    createdAt: string;
+    totalPrice: number;
+    receiver: string;
+    orderItems: OrderItem[];
+    isDelivered: boolean;
+    // add other properties if needed
+};
+
 export default function OrdersPage (){
-    const [data, setdata] = useState<any[]>([]) ; 
+    const [data, setdata] = useState<Order[]>([]) ; 
     const token = getCookie("token") ;
     const [loading, setloading] = useState(false) ;
     const router = useRouter() ;
@@ -23,7 +44,7 @@ export default function OrdersPage (){
             }
             )
         const allOrders = await res.json();
-        const deliveredOrders = allOrders.filter((item: any) => item.isDelivered === false);
+        const deliveredOrders = allOrders.filter((item: Order) => item.isDelivered === false);
         setdata(deliveredOrders);
         }
         fetchdata() ;
@@ -33,6 +54,12 @@ export default function OrdersPage (){
         setTimeout(() => {
             router.push(`/account/order/${id}`)
         }, 2000);
+    }
+    const handleTranferPage=(link:string) => {
+        setloading(true) ;
+        setTimeout(()=>{
+            router.push(link) ; 
+        },2000)
     }
     return (
         <>
@@ -53,17 +80,17 @@ export default function OrdersPage (){
                         <div className="nav-order  ">
                             <ul className="flex gap-8 p-2">
                                 <li className=" nav-order-list-checked">
-                                    <a href="/account/order">Current</a>
+                                    <div onClick={()=>{handleTranferPage("/account/order")}}>Current</div>
                                 </li>
-                                <li className="nav-order-list"> <a href="/account/order/delivery">Delivered</a></li>
-                                <li className="nav-order-list"><a href="#">Canceled</a></li>
-                                <li className="nav-order-list"><a href="#">Returned</a></li>
+                                <li className="nav-order-list"> <div onClick={()=>{handleTranferPage("/account/order/delivery")}}>Delivered</div></li>
+                                <li className="nav-order-list"><div >Canceled</div></li>
+                                <li className="nav-order-list"><div>Returned</div></li>
                             </ul>
                         </div>
                         <div className="current-list">
                             {
                                 data.length>0 ? (
-                                    data.map((item, index) =>
+                                    data.map((item) =>
                                 (
                                     <>
                                     <div className="order-card w-[100%] h-[275px] py-4 flex gap-6 flex-col">
@@ -92,11 +119,11 @@ export default function OrdersPage (){
                                         
                                         <div className="order-imgae flex gap-5 flex-wrap ">
                                             {
-                                                item.orderItems.map((image:any,index :number)=>
+                                                item.orderItems.map((orderItem: OrderItem) =>
                                                 (
                                                     <>
                                                         <div className="w-[100px] h-[100px]">
-                                                            <img src={image.image} title={image.name}  className="w-[100px] h-[100px]"/>
+                                                            <img src={orderItem.image} title={orderItem.name}  className="w-[100px] h-[100px]"/>
                                                         </div>
                                                         
                                                     </>

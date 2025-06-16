@@ -8,7 +8,42 @@ export default function StatusPage() {
     const id = parseInt(params.id) ; 
     console.log(id) ; 
     const token = getCookie("token") ;
-    const [data,setdata] = useState({})
+    type OrderItem = {
+        image: string;
+        name: string;
+        qty: number;
+        price: number;
+        discount: number;
+    };
+
+    type OrderData = {
+        _id?: string;
+        createdAt?: string;
+        receiver?: string;
+        paymentMethod?: string;
+        totalPrice?: number;
+        orderItems?: OrderItem[];
+        shippingAddresss?: shippingAddress;
+        user:user ;
+    };
+    type shippingAddress= {
+        address?:string;
+    }
+    type user = {
+        username?:string ; 
+        email?: string ; 
+    }
+
+    const [data, setdata] = useState<OrderData>({
+        _id: "",
+        createdAt: "",
+        receiver: "",
+        paymentMethod: "",
+        totalPrice: 0,
+        orderItems: [],
+        shippingAddresss: { address: "" },
+        user: { username: "", email: "" }
+    })
     useEffect(()=>{
         if(token)
         {
@@ -35,38 +70,54 @@ export default function StatusPage() {
                             <span className="p-2 text-[16px] font-light text-gray-500"> Track your order
                             </span>
                         </div>
-                        <img className="w-[912px] h-[292px]" src="../img/order-status.png" alt="" />
-                        <div className="order-status-info flex flex-col mt-6">
+                        {/* <img className="w-[912px] h-[292px]" src="../img/order-status.png" alt="" /> */}
+                        <div className="order-status-info flex flex-col mt-6  w-[1000px]">
                             <div className="flex justify-between p-4 items-center h-[56px] bg-neutral-100">
-                                <span className="text-[16px] font-medium">order code</span>
+                                <span className="text-[16px] font-medium">Mã</span>
                                 <span className="text-[16px] font-light">{data._id}</span>
                             </div>
                             <div className="flex justify-between p-4 items-center h-[56px] ">
-                                <span className="text-[16px] font-medium">Placed on</span>
+                                <span className="text-[16px] font-medium">Thời Gian Đặt</span>
                                 <span className="text-[16px] font-light">{data.createdAt}</span>
                             </div>
                             <div className="flex justify-between p-4 items-center h-[56px] bg-neutral-100">
-                                <span className="text-[16px] font-medium">Sent to</span>
+                                <span className="text-[16px] font-medium">Người Nhận</span>
                                 <span className="text-[16px] font-light">{data.receiver}</span>
                             </div>
                             <div className="flex justify-between p-4 items-center h-[56px]">
-                                <span className="text-[16px] font-medium">Payment type</span>
+                                <span className="text-[16px] font-medium">Loại Thanh Toán </span>
                                 <span className="text-[16px] font-light">{data.paymentMethod}</span>
                             </div>
                             <div className="flex justify-between p-4 items-center h-[56px] bg-neutral-100">
-                                <span className="text-[16px] font-medium">Transaction id</span>
+                                <span className="text-[16px] font-medium">ID Vận Chuyên </span>
                                 <span className="text-[16px] font-light">2345678910</span>
+                            </div>
+                            <div className="flex justify-between p-4 items-center h-[56px]">
+                                <span className="text-[16px] font-medium">Tổng số tiền </span>
+                                <span className="text-[16px] font-light">{data.totalPrice} $</span>
+                            </div>
+                            <div className="flex justify-between p-4 items-center h-[56px]">
+                                <span className="text-[16px] font-medium">Địa chỉ người nhận</span>
+                                <span className="text-[16px] font-light">{data.shippingAddresss?.address}</span>
                             </div>
                             <div className="flex justify-between p-4 items-center h-[56px]">
                                 <span className="text-[16px] font-medium">Amount Paid</span>
                                 <span className="text-[16px] font-light">{data.totalPrice}</span>
+                            </div>
+                            <div className="flex justify-between p-4 items-center h-[56px]">
+                                <span className="text-[16px] font-medium">Người Đặt Hàng</span>
+                                <span className="text-[16px] font-light">{data.user.username}</span>
+                            </div>
+                            <div className="flex justify-between p-4 items-center h-[56px]">
+                                <span className="text-[16px] font-medium">Email người đặt hàng</span>
+                                <span className="text-[16px] font-light">{data.user.email}</span>
                             </div>
 
                         </div>
                         <div className="order-status-card mt-[20px] h-[200px] overflow-scroll">
                             {
                                 data.orderItems && (
-                                    data.orderItems.map((item:any,index:number)=>(
+                                    data.orderItems.map((item:OrderItem)=>(
                                     <>
                                      <div className="h-[86px] flex mt-1 relative ">
                                             <img src={item.image} alt="" />

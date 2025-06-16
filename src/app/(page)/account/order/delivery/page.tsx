@@ -5,10 +5,22 @@ import { useEffect } from "react"
 import { useRouter } from "next/navigation";
 import { LoadingPage } from "@/app/Components/notification/loading";
 import { NullPage } from "@/app/Components/notification/null";
-import { div } from "motion/react-client";
+type OrderItem = {
+    image: string;
+    name: string;
+};
+
+type Order = {
+    _id: number;
+    createdAt: string;
+    totalPrice: number;
+    receiver: string;
+    orderItems: OrderItem[];
+    isDelivered: boolean;
+};
+
 export default function DeliveryPage (){
-    const [data, setdata] = useState<any[]>([]) ; 
-    const [checkdata,setcheckdata] = useState<any[]>([]) ;
+    const [data, setdata] = useState<Order[]>([]) ; 
     const token = getCookie("token") ;
     const [loading, setloading] = useState(false) ;
     const router = useRouter() ;
@@ -24,7 +36,7 @@ export default function DeliveryPage (){
 
             })
         const allOrders = await res.json();
-        const deliveredOrders = allOrders.filter((item: any) => item.isDelivered === true);
+        const deliveredOrders = allOrders.filter((item: Order) => item.isDelivered === true);
         setdata(deliveredOrders);
         }
         fetchdata() ;
@@ -35,6 +47,12 @@ export default function DeliveryPage (){
             router.push(`/account/order/${id}`)
         }, 2000);
     }
+    const handleTranferPage = (link:string) =>{
+        setloading(true) 
+        setTimeout(() => {
+            router.push(link) ; 
+        }, 2000);
+    } 
     console.log(data) ; 
     return (
         <>
@@ -55,9 +73,9 @@ export default function DeliveryPage (){
                         <div className="nav-order  ">
                             <ul className="flex gap-8 p-2">
                                 <li className=" ">
-                                    <a href="/account/order">Current</a>
+                                    <div onClick={()=>handleTranferPage("/account/order")}>Current</div>
                                 </li>
-                                <li className="nav-order-list nav-order-list-checked"> <a href="/account/order/delivery">Delivered</a></li>
+                                <li className="nav-order-list nav-order-list-checked"> Delivered</li>
                                 <li className="nav-order-list"><a href="#">Canceled</a></li>
                                 <li className="nav-order-list"><a href="#">Returned</a></li>
                             </ul>
@@ -65,7 +83,7 @@ export default function DeliveryPage (){
                         <div className="current-list">
                             {
                                 data.length>0 ? (
-                                    data.map((item, index) =>
+                                    data.map((item:Order) =>
                                 (
                                     <>
                                     <div className="order-card w-[100%] h-[275px] py-4 flex gap-6 flex-col">
@@ -94,11 +112,11 @@ export default function DeliveryPage (){
                                         
                                         <div className="order-imgae flex gap-5 flex-wrap ">
                                             {
-                                                item.orderItems.map((image:any,index :number)=>
+                                                item.orderItems.map((items:OrderItem)=>
                                                 (
                                                     <>
                                                         <div className="w-[100px] h-[100px]">
-                                                            <img src={image.image} title={image.name}  className="w-[100px] h-[100px]"/>
+                                                            <img src={items.image} title={items.name}  className="w-[100px] h-[100px]"/>
                                                         </div>
                                                         
                                                     </>

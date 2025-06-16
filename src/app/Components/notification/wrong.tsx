@@ -1,6 +1,5 @@
 import Lottie from 'react-lottie-player'
 import wrongAnimation from '../../../../public/animations/wrong.json'
-import { useEffect, useState } from 'react';
 type props = {
    data :{
     title: string  ; 

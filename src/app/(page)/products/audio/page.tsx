@@ -5,9 +5,25 @@ import { useEffect } from 'react';
 
 import { Category } from "@/app/Components/Category/Category";
 import { SearchByCriteria } from "@/app/Components/SearchByCriteria/SearchByCriteria";
-export default function mobilePhone() {
-    const [product,setproduct] = useState([]) ; 
-        const [page,setpage] = useState(1) ;
+type data  = {
+    _id: number ; 
+    name:string ; 
+    image:string ; 
+    description:string ; 
+    rating:number ; 
+    price:number ; 
+    countInStock:number ; 
+    discount:number; 
+    ram?:string ; 
+    screen_size?:string ; 
+    processor?:string ; 
+    gpu_brand?:string ; 
+    drive_size?:string ; 
+    brand:number ; 
+    category:number ; 
+}
+export default function AudioPage() {
+    const [product, setproduct] = useState<data[]>([]);
         useEffect(()=>{
             const data_product = async () =>{
                  // Lấy 7 trang (2,3,4,5,6,7,8) = 56 sản phẩm
@@ -22,7 +38,7 @@ export default function mobilePhone() {
     return (
         <>
             <Category/>
-            <SearchByCriteria data_products={{ products: product as any[] }}/>
+            <SearchByCriteria data_products={{ products: product as data[] }}/>
             
         </>
     )

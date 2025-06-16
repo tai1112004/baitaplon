@@ -3,7 +3,6 @@ import { useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import { CiCircleChevLeft, CiCircleChevRight } from "react-icons/ci";
 
-import styles from './Section3.module.css';
 
 export const Section3 = () => {
     const data = [

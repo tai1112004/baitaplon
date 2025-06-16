@@ -1,5 +1,5 @@
 "use client"
-import { useEffect } from "react";
+
 import { useCallback}  from "react";
 export default function PaymentPage() {
     

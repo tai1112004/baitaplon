@@ -4,13 +4,11 @@ import { CiSearch } from "react-icons/ci";
 import { FaUserPlus } from "react-icons/fa";
 import { CiUser } from "react-icons/ci";
 import { CiShoppingBasket } from "react-icons/ci";
-import { Search } from "./search/search";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { useState } from "react";
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
-import LoadingThreeDotsJumping from "../loading/loading";
 import { useEffect } from "react";
 import { getCookie } from "@/app/function/GetCookie/GetCookie";
 import { FaRegCircleUser } from "react-icons/fa6";
@@ -79,10 +77,13 @@ export const Header = () => {
         
         
     },[token,count_cart])
-    const handleSubmit= (e:any) =>{
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log("đã chạy vào đây");
-        console.log(e.target.thongtin.value);
+        // TypeScript-safe way to access form values
+        const form = e.target as HTMLFormElement;
+        const thongtin = (form.elements.namedItem("thongtin") as HTMLInputElement)?.value;
+        console.log(thongtin);
     }
     const handleClick_User = ()=>{
          

@@ -1,5 +1,4 @@
 import { TfiArrowCircleRight } from "react-icons/tfi";
-import { SiSamsung } from "react-icons/si";
 import { FaApple } from "react-icons/fa";
 export const TopBrands = () => {
     return (

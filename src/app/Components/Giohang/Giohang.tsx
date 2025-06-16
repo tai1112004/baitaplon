@@ -1,17 +1,14 @@
 "use client"
-import { CiDeliveryTruck } from "react-icons/ci";
-import { MdOutlineHighQuality } from "react-icons/md";
-import { CiTrash } from "react-icons/ci";
+
 import {useState} from 'react';
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import LoadingThreeDotsJumping from "../loading/loading";
 import { getCookie } from "@/app/function/GetCookie/GetCookie";
 import { DelPage } from "../notification/del";
 import { NullPage } from "../notification/null";
 import { LoadingPage } from "../notification/loading";
 // import { WrongPage } from "../notification/wrong";
-import { Truck, Award, Trash2, Plus, Minus, ShoppingBag, Package, CreditCard } from 'lucide-react';
+import { Truck, Award, Trash2, Plus, Minus,  Package, CreditCard } from 'lucide-react';
 
 // const DelPage = () => (
 //   <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-bounce">
@@ -104,7 +101,7 @@ export const Giohang =() =>{
     const rounter= useRouter() ; 
         const [sum,setsum] = useState(0) ;
     useEffect(()=>{
-        var tongtien = 0 ; 
+        let tongtien = 0 ; 
         if(data.length!==0)
         {
              tongtien = data.reduce((sum, items) => {
@@ -114,8 +111,8 @@ export const Giohang =() =>{
         setsum(tongtien);
     },[data]) ; 
     
-    const handleClickReduce = (e: any) => {
-        const pointer = parseInt(e.target.id);
+    const handleClickReduce = (e: React.MouseEvent<HTMLButtonElement>) => {
+        const pointer = parseInt((e.target as HTMLButtonElement).id);
         const newData = data.map((item, index) => {
             if (pointer === index) {
                 if (item.qty > 1) {
@@ -126,9 +123,9 @@ export const Giohang =() =>{
         });
         setData(newData);
     }
-    const handleClickIncrease =(e:any)=>
+    const handleClickIncrease = (e: React.MouseEvent<HTMLButtonElement>) =>
     {
-        const pointer = parseInt(e.target.id) ; 
+        const pointer = parseInt((e.target as HTMLButtonElement).id) ; 
         const newData = data.map((item, index) => {
             if (pointer === index) {
                 
@@ -142,7 +139,7 @@ export const Giohang =() =>{
     }
     const handleClickDelete=(pointer:number)=>{
         const del = async() =>{
-            const res = await fetch(`https://ecommerce-django-production-7581.up.railway.app/api/orders/removefromcart/${pointer}/`,{
+             await fetch(`https://ecommerce-django-production-7581.up.railway.app/api/orders/removefromcart/${pointer}/`,{
                 method:'DELETE',
                 headers:{
                     'Content-Type':'application/json',
@@ -153,7 +150,7 @@ export const Giohang =() =>{
         }
         del() ; 
        
-        const newData = data.filter((item, index) =>
+        const newData = data.filter((item) =>
         {
             return item.product !== pointer ;
 
@@ -206,7 +203,7 @@ export const Giohang =() =>{
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                             {/* Products List */}
                             <div className="lg:col-span-2 space-y-4">
-                                {data.map((item, index) => (
+                                {data.map((item:CartItem, index:number) => (
                                     <div 
                                         key={index}
                                         className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300 group"
@@ -266,7 +263,7 @@ export const Giohang =() =>{
                                                             {/* Quantity Controls */}
                                                             <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
                                                                 <button
-                                                                    onClick={() => handleClickReduce(index)}
+                                                                    onClick={handleClickReduce}
                                                                     disabled={item.qty <= 1}
                                                                     className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                                                                     title="Giảm số lượng"
@@ -277,7 +274,7 @@ export const Giohang =() =>{
                                                                     {item.qty}
                                                                 </div>
                                                                 <button
-                                                                    onClick={() => handleClickIncrease(index)}
+                                                                    onClick={ handleClickIncrease}
                                                                     className="p-2 hover:bg-gray-50 transition-colors duration-200"
                                                                     title="Tăng số lượng"
                                                                 >

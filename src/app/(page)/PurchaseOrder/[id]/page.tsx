@@ -21,20 +21,6 @@ export default function PurchaseOrderID() {
         // initialize other properties as needed
     });
     const token = getCookie("token") ; 
-    const [inforUser,setInfor] = useState({
-            paymentMethod: "cash" ,
-            taxPrice: 20 , 
-            shippingPrice: 20, 
-            totalPrice: 20 , 
-            shippingAddress : {
-                address: null,
-                city : "Ha Noi" , 
-                postalCode: "lololo" ,
-                country: "vn" ,
-            },
-            qty : 1 ,
-            receiver:null ,
-        }) ;
     useEffect(()=>{
         if(token)
         {
@@ -61,10 +47,11 @@ export default function PurchaseOrderID() {
     const router = useRouter();
     const [progress, setProgress] = useState(0);
 
-    const hanldeBuyProduct = (e: any) => {
+    const hanldeBuyProduct = (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const user = e.target.user.value ; 
-        const address = e.target.address.value ;
+        const form = e.target as HTMLFormElement;
+        const user = (form.user as HTMLInputElement).value; 
+        const address = (form.address as HTMLInputElement).value;
         setAlert(true);
         setProgress(0);
         if(token)
@@ -91,8 +78,8 @@ export default function PurchaseOrderID() {
         })
                 }
                 )
-                // const data = await res.json();
-                // console.log(data) ; 
+                const data = await res.json();
+                console.log(data) ; 
 
             }
             BuyProduct() ;

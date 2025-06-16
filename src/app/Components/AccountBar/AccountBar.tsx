@@ -1,20 +1,41 @@
 "use client"
-import { usePathname } from "next/navigation"
+import { usePathname,useRouter } from "next/navigation"
 import {useState} from 'react' 
 import { useEffect } from "react"
+import { LoadingPage } from "../notification/loading"
+
 export const AccountBar= ()=>{
     const pathname = usePathname() ; 
     const [link,setlink ] = useState(pathname);
+    const [loading,setloading] = useState(false) ; 
+    const router = useRouter() ; 
     useEffect(()=>{
         setlink(pathname);
-        const link = document.getElementById(pathname)  ; 
-        const linkClass = link ? link.classList.add("c-menu-list-item-clicked") : null ;
     },[link])
+    const handleTranferPage = (link:string) =>{
+        if(link!=pathname) 
+        {
+            setloading(true) ; 
+            setTimeout(() => {
+                router.push(link)
+            }, 2000);
+        }
+    }
+    const handleLogout = () =>{
+        setloading(true) ; 
+        setTimeout(() => {
+            document.cookie = "token=; path=/; max-age=0";
+            window.location.href = "/" ;  
+        }, 2000);
+    }
         
     
 
     return (
         <>
+        {
+            loading && <LoadingPage/>
+        }
             <div className="bg-neutral-100 w-[288px] rounded-lg h-[100vh]">
                         <span className=" flex gap-4 h-16 items-center text-center p-2 text-[20px] font-medium"> <svg
                                 width="60" height="60" viewBox="0 0 60 60" fill="none"
@@ -32,7 +53,7 @@ export const AccountBar= ()=>{
                             <span id="headerName"></span> </span>
                         <ul className="">
                             <li>
-                                <a href="/account/persional" className="c-menu-list-item" id="/account/persional"> <svg width="24" height="24"
+                                <div onClick={()=>handleTranferPage("/account/persional")} className="c-menu-list-item" id="/account/persional"> <svg width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path
                                             d="M12 12.75C8.83 12.75 6.25 10.17 6.25 7C6.25 3.83 8.83 1.25 12 1.25C15.17 1.25 17.75 3.83 17.75 7C17.75 10.17 15.17 12.75 12 12.75ZM12 2.75C9.66 2.75 7.75 4.66 7.75 7C7.75 9.34 9.66 11.25 12 11.25C14.34 11.25 16.25 9.34 16.25 7C16.25 4.66 14.34 2.75 12 2.75Z"
@@ -47,11 +68,11 @@ export const AccountBar= ()=>{
                                             d="M3.41016 22.75C3.00016 22.75 2.66016 22.41 2.66016 22C2.66016 17.73 6.85018 14.25 12.0002 14.25C13.0902 14.25 14.1702 14.41 15.1802 14.71C15.5802 14.83 15.8002 15.25 15.6802 15.64C15.5602 16.04 15.1402 16.26 14.7502 16.14C13.8702 15.88 12.9502 15.74 12.0002 15.74C7.68018 15.74 4.16016 18.54 4.16016 21.99C4.16016 22.41 3.82016 22.75 3.41016 22.75Z"
                                             fill="#444444" />
                                     </svg>
-                                    Personal Data</a>
+                                    Personal Data</div>
 
                             </li>
                             <li>
-                                <a href="/account/payment" className="c-menu-list-item" id="/account/payment"><svg width="25" height="24"
+                                <div onClick={()=>handleTranferPage("/account/payment")} className="c-menu-list-item" id="/account/payment"><svg width="25" height="24"
                                         viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path
                                             d="M13.9002 17.4201H11.3902C9.75016 17.4201 8.42016 16.0401 8.42016 14.3401C8.42016 13.9301 8.76016 13.5901 9.17016 13.5901C9.58016 13.5901 9.92016 13.9301 9.92016 14.3401C9.92016 15.2101 10.5802 15.9201 11.3902 15.9201H13.9002C14.5502 15.9201 15.0902 15.3401 15.0902 14.6401C15.0902 13.7701 14.7802 13.6001 14.2702 13.4201L10.2402 12.0001C9.46016 11.7301 8.41016 11.1501 8.41016 9.36008C8.41016 7.82008 9.62016 6.58008 11.1002 6.58008H13.6102C15.2502 6.58008 16.5802 7.96008 16.5802 9.66008C16.5802 10.0701 16.2402 10.4101 15.8302 10.4101C15.4202 10.4101 15.0802 10.0701 15.0802 9.66008C15.0802 8.79008 14.4202 8.08008 13.6102 8.08008H11.1002C10.4502 8.08008 9.91016 8.66008 9.91016 9.36008C9.91016 10.2301 10.2202 10.4001 10.7302 10.5801L14.7602 12.0001C15.5402 12.2701 16.5902 12.8501 16.5902 14.6401C16.5802 16.1701 15.3802 17.4201 13.9002 17.4201Z"
@@ -63,11 +84,11 @@ export const AccountBar= ()=>{
                                             d="M12.5 22.75C6.57 22.75 1.75 17.93 1.75 12C1.75 6.07 6.57 1.25 12.5 1.25C18.43 1.25 23.25 6.07 23.25 12C23.25 17.93 18.43 22.75 12.5 22.75ZM12.5 2.75C7.4 2.75 3.25 6.9 3.25 12C3.25 17.1 7.4 21.25 12.5 21.25C17.6 21.25 21.75 17.1 21.75 12C21.75 6.9 17.6 2.75 12.5 2.75Z"
                                             fill="#0C0C0C" />
                                     </svg>
-                                    Payment & Instalments</a>
+                                    Payment & Instalments</div>
 
                             </li>
                             <li>
-                                <a href="/account/order" className="c-menu-list-item" id="/account/order"><svg width="24" height="24"
+                                <div onClick={()=>handleTranferPage("/account/order")} className="c-menu-list-item" id="/account/order"><svg width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path
                                             d="M5.18988 6.37994C4.99988 6.37994 4.79988 6.29994 4.65988 6.15994C4.36988 5.86994 4.36988 5.38994 4.65988 5.09994L8.28988 1.46994C8.57988 1.17994 9.05988 1.17994 9.34988 1.46994C9.63988 1.75994 9.63988 2.23994 9.34988 2.52994L5.71988 6.15994C5.56988 6.29994 5.37988 6.37994 5.18988 6.37994Z"
@@ -88,10 +109,10 @@ export const AccountBar= ()=>{
                                             d="M14.8902 22.75H8.86024C5.28024 22.75 4.48024 20.62 4.17024 18.77L2.76024 10.12C2.69024 9.71 2.97024 9.33 3.38024 9.26C3.79024 9.19 4.17024 9.47 4.24024 9.88L5.65024 18.52C5.94024 20.29 6.54024 21.25 8.86024 21.25H14.8902C17.4602 21.25 17.7502 20.35 18.0802 18.61L19.7602 9.86C19.8402 9.45 20.2302 9.18 20.6402 9.27C21.0502 9.35 21.3102 9.74 21.2302 10.15L19.5502 18.9C19.1602 20.93 18.5102 22.75 14.8902 22.75Z"
                                             fill="#0C0C0C" />
                                     </svg>
-                                    Orders</a>
+                                    Orders</div>
                             </li>
                             <li>
-                                <a href="/account/discount" className="c-menu-list-item" id="/account/discount"> <svg width="24" height="24" viewBox="0 0 24 24"
+                                <div onClick={()=>handleTranferPage("/account/discount")} className="c-menu-list-item" id="/account/discount"> <svg width="24" height="24" viewBox="0 0 24 24"
                                         fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path
                                             d="M15.9702 22.75H7.97021C4.55021 22.75 3.22021 21.42 3.22021 18V10C3.22021 9.59 3.56021 9.25 3.97021 9.25H19.9702C20.3802 9.25 20.7202 9.59 20.7202 10V18C20.7202 21.42 19.3902 22.75 15.9702 22.75ZM4.72021 10.75V18C4.72021 20.58 5.39021 21.25 7.97021 21.25H15.9702C18.5502 21.25 19.2202 20.58 19.2202 18V10.75H4.72021Z"
@@ -109,10 +130,10 @@ export const AccountBar= ()=>{
                                             d="M9.93994 16.9C9.65994 16.9 9.36994 16.83 9.10994 16.69C8.53994 16.38 8.18994 15.79 8.18994 15.15V10C8.18994 9.59 8.52994 9.25 8.93994 9.25H14.9799C15.3899 9.25 15.7299 9.59 15.7299 10V15.13C15.7299 15.78 15.3799 16.37 14.8099 16.67C14.2399 16.98 13.5499 16.94 13.0099 16.58L12.1199 15.98C12.0399 15.92 11.9299 15.92 11.8399 15.98L10.8999 16.6C10.6099 16.8 10.2699 16.9 9.93994 16.9ZM9.68994 10.75V15.14C9.68994 15.27 9.76994 15.33 9.81994 15.36C9.86994 15.39 9.96994 15.42 10.0799 15.35L11.0199 14.73C11.6099 14.34 12.3699 14.34 12.9499 14.73L13.8399 15.33C13.9499 15.4 14.0499 15.37 14.0999 15.34C14.1499 15.31 14.2299 15.25 14.2299 15.12V10.74H9.68994V10.75Z"
                                             fill="#0C0C0C" />
                                     </svg>
-                                    Discounts</a>
+                                    Discounts</div>
                             </li>
                             <li>
-                                <a href="/account/notification" className="c-menu-list-item" id="/account/notification"><svg width="24" height="24"
+                                <div onClick={()=>handleTranferPage("/account/notification")} className="c-menu-list-item" id="/account/notification"><svg width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path
                                             d="M12.0199 20.5299C9.68987 20.5299 7.35987 20.1599 5.14987 19.4199C4.30987 19.1299 3.66987 18.5399 3.38987 17.7699C3.09987 16.9999 3.19987 16.1499 3.65987 15.3899L4.80987 13.4799C5.04987 13.0799 5.26987 12.2799 5.26987 11.8099V8.91992C5.26987 5.19992 8.29987 2.16992 12.0199 2.16992C15.7399 2.16992 18.7699 5.19992 18.7699 8.91992V11.8099C18.7699 12.2699 18.9899 13.0799 19.2299 13.4899L20.3699 15.3899C20.7999 16.1099 20.8799 16.9799 20.5899 17.7699C20.2999 18.5599 19.6699 19.1599 18.8799 19.4199C16.6799 20.1599 14.3499 20.5299 12.0199 20.5299ZM12.0199 3.66992C9.12987 3.66992 6.76987 6.01992 6.76987 8.91992V11.8099C6.76987 12.5399 6.46987 13.6199 6.09987 14.2499L4.94987 16.1599C4.72987 16.5299 4.66987 16.9199 4.79987 17.2499C4.91987 17.5899 5.21987 17.8499 5.62987 17.9899C9.80987 19.3899 14.2399 19.3899 18.4199 17.9899C18.7799 17.8699 19.0599 17.5999 19.1899 17.2399C19.3199 16.8799 19.2899 16.4899 19.0899 16.1599L17.9399 14.2499C17.5599 13.5999 17.2699 12.5299 17.2699 11.7999V8.91992C17.2699 6.01992 14.9199 3.66992 12.0199 3.66992Z"
@@ -125,11 +146,11 @@ export const AccountBar= ()=>{
                                             fill="#444444" />
                                     </svg>
 
-                                    Notification</a>
+                                    Notification</div>
 
                             </li>
                             <li className="">
-                                <a href="/account/contact" className="c-menu-list-item " id="/account/contact">
+                                <div onClick={()=>handleTranferPage("/account/contact")} className="c-menu-list-item " id="/account/contact">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path
@@ -143,10 +164,10 @@ export const AccountBar= ()=>{
                                             fill="#0C0C0C" />
                                     </svg>
 
-                                    Contact us</a>
+                                    Contact us</div>
                             </li>
                             <li className="">
-                                <a href="#" className="c-menu-list-item"><svg width="24" height="24" viewBox="0 0 24 24"
+                                <div onClick={handleLogout} className="c-menu-list-item"><svg width="24" height="24" viewBox="0 0 24 24"
                                         fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path
                                             d="M15.24 22.27H15.11C10.67 22.27 8.53002 20.52 8.16002 16.6C8.12002 16.19 8.42002 15.82 8.84002 15.78C9.24002 15.74 9.62002 16.05 9.66002 16.46C9.95002 19.6 11.43 20.77 15.12 20.77H15.25C19.32 20.77 20.76 19.33 20.76 15.26V8.73998C20.76 4.66998 19.32 3.22998 15.25 3.22998H15.12C11.41 3.22998 9.93002 4.41998 9.66002 7.61998C9.61002 8.02998 9.26002 8.33998 8.84002 8.29998C8.42002 8.26998 8.12001 7.89998 8.15001 7.48998C8.49001 3.50998 10.64 1.72998 15.11 1.72998H15.24C20.15 1.72998 22.25 3.82998 22.25 8.73998V15.26C22.25 20.17 20.15 22.27 15.24 22.27Z"
@@ -158,7 +179,7 @@ export const AccountBar= ()=>{
                                             d="M5.84994 16.1001C5.65994 16.1001 5.46994 16.0301 5.31994 15.8801L1.96994 12.5301C1.67994 12.2401 1.67994 11.7601 1.96994 11.4701L5.31994 8.12009C5.60994 7.83009 6.08994 7.83009 6.37994 8.12009C6.66994 8.41009 6.66994 8.89009 6.37994 9.18009L3.55994 12.0001L6.37994 14.8201C6.66994 15.1101 6.66994 15.5901 6.37994 15.8801C6.23994 16.0301 6.03994 16.1001 5.84994 16.1001Z"
                                             fill="#444444" />
                                     </svg>
-                                    Log out</a>
+                                    Log out</div>
                             </li>
                         </ul>
                     </div>

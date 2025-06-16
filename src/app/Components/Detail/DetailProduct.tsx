@@ -1,5 +1,5 @@
 "use client";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useParams } from "next/navigation"
@@ -13,19 +13,24 @@ import { Sanphamlienquan } from "../sanphamlienquan/sanphamlienquan";
 import { getCookie } from "@/app/function/GetCookie/GetCookie";
 import { WrongPage } from "../notification/wrong";
 import { AddCartPage } from "../notification/addCart";
-import LoadingThreeDotsJumping from "../loading/loading";
 import { LoadingPage } from "../notification/loading";
 
 type props = {
     category : string ; 
 };
-
+type   dataCommnents=
+{
+    name: string ;
+    image : string ; 
+    rating: number ; 
+    content:string ; 
+    date: string  ; 
+} ;
 export const DetailComputer = ({category}:props) =>{
     const router = useRouter() ; 
     const params= useParams<{id:string}>(); 
     const id = parseInt(params.id)  ;
     const asPathname = usePathname();
-    const [searchState, setSearchState] = useState("");
     type Product = {
         id?: number;
         name?: string;
@@ -40,11 +45,9 @@ export const DetailComputer = ({category}:props) =>{
         gpu_brand?: string;
         description?: string;
         rating?: number;
-        [key: string]: any;
     };
     const [data_itemProduct, setdata] = useState<Product>({});
     const [product,setproduct] = useState([]) ; 
-    const [page,setpage] = useState(1) ;
     const [wrong, setwrong] = useState(false) ; 
     const [loading, setloading] = useState(false) ;
     const [addcart , setAddCart] = useState(false) ; 
@@ -98,7 +101,7 @@ export const DetailComputer = ({category}:props) =>{
         }
     },[quantity])
     useEffect(() => {
-        setSearchState(asPathname);
+        // setSearchState(asPathname); // Removed undefined function
     },[asPathname]);
     // useEffect(()=>{
     //     if(data_itemProduct)
@@ -117,13 +120,13 @@ export const DetailComputer = ({category}:props) =>{
         
     },[quantity])
     const arrayurl = asPathname.split("/"); 
-    const dataCommnents:any=[] ;
-    const [check, useCheck] = useState(dataCommnents) ; 
+  
+    const [check, useCheck] = useState<dataCommnents[]>([]) ; 
 
-    const handleSubmit=(e:any)=>
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) =>
     {
         e.preventDefault();
-        const contents= e.target.comments.value
+        const contents = (e.target as HTMLFormElement).comments.value;
         console.log(contents) ;
         if(contents!= null && userRating > 0)
         {
@@ -136,7 +139,7 @@ export const DetailComputer = ({category}:props) =>{
                 "date": new Date().toLocaleDateString('vi-VN')
             }
             useCheck([...check,newComment]) ;
-            e.target.comments.value=null ;
+            (e.target as HTMLFormElement).comments.value = null ;
             setUserRating(0);
             setHoveredRating(0);
         }
@@ -170,7 +173,7 @@ export const DetailComputer = ({category}:props) =>{
         else 
         {
             const add_cart = async() =>{
-                const res = await fetch(`https://ecommerce-django-production-7581.up.railway.app/api/orders/addtocart/${id}/`,{
+                await fetch(`https://ecommerce-django-production-7581.up.railway.app/api/orders/addtocart/${id}/`,{
                     method: 'POST',
                     headers: {
                         "Content-Type": "application/json",
@@ -215,7 +218,7 @@ export const DetailComputer = ({category}:props) =>{
             
             {/* Breadcrumb */}
             <nav className="flex items-center space-x-2 text-sm text-gray-600 py-4">
-                {arrayurl.map((item, index) => (
+                {arrayurl.map((item:string, index) => (
                     <div key={index} className="flex items-center">
                         {index === 0 ? (
                             <span className="hover:text-blue-600 cursor-pointer">Home</span>
@@ -455,7 +458,25 @@ export const DetailComputer = ({category}:props) =>{
                 <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
                     Sản phẩm liên quan
                 </h2>
-                <Sanphamlienquan data_products={{ products: product as any[] }}/>
+                <Sanphamlienquan data_products={{
+                    products: (product as Product[]).map((item: any) => ({
+                        _id: item.id ?? 0,
+                        name: item.name ?? "",
+                        image: item.image ?? "",
+                        price: item.price ?? 0,
+                        discount: item.discount ?? 0,
+                        brand: item.brand ?? "",
+                        screen_size: item.screen_size ?? "",
+                        drive_size: item.drive_size ?? "",
+                        processor: item.processor ?? "",
+                        ram: item.ram ?? "",
+                        gpu_brand: item.gpu_brand ?? "",
+                        description: item.description ?? "",
+                        rating: item.rating ?? 0,
+                        countInStock: item.countInStock ?? 0,
+                        category: item.category ?? category
+                    }))
+                }}/>
             </div>
 
             {/* Comments Section */}
@@ -537,7 +558,7 @@ export const DetailComputer = ({category}:props) =>{
                                     <p>Chưa có đánh giá nào. Hãy là người đầu tiên đánh giá sản phẩm này!</p>
                                 </div>
                             ) : (
-                                check.map((item: any, index: number) => (
+                                check.map((item: dataCommnents, index: number) => (
                                     <div key={index} className="bg-gray-50 rounded-xl p-6 border border-gray-100">
                                         <div className="flex items-start gap-4">
                                             <img 
@@ -549,7 +570,7 @@ export const DetailComputer = ({category}:props) =>{
                                                 <div className="flex items-center justify-between mb-2">
                                                     <h4 className="font-semibold text-gray-900">{item.name}</h4>
                                                     <div className="flex">
-                                                        {[1,2,3,4,5].map((star,index) => {
+                                                        {[1,2,3,4,5].map((star:number) => {
                                                             if(star <= item.rating) return (<FaStar key={star} className="w-4 h-4 text-yellow-400" />)
                                                             return (
                                                                 <FaStar key={star} className="w-4 h-4 text-gray-300" />

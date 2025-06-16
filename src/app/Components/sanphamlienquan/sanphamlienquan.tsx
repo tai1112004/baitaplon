@@ -2,13 +2,30 @@
 import { useEffect, useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import { CiCircleChevLeft, CiCircleChevRight } from "react-icons/ci";
+type data  = {
+    _id: number ; 
+    name:string ; 
+    image:string ; 
+    description:string ; 
+    rating:number ; 
+    price:number ; 
+    countInStock:number ; 
+    discount:number; 
+    ram?:string ; 
+    screen_size?:string ; 
+    processor?:string ; 
+    gpu_brand?:string ; 
+    drive_size?:string ; 
+    brand:number ; 
+    category:number ; 
+}
 type props = {
-    data_products: { products: any[] };
+    data_products: { products: data[] };
 }
 export const Sanphamlienquan = ({data_products}:props) => {
     const product =data_products?.products || []; 
     const [current, setCurrent] = useState(0);
-    const [sanpham, setsanpham] = useState<any[]>([]);
+    const [sanpham, setsanpham] = useState<data[]>([]);
     const handlePrev = () => {
         setCurrent((prev) => (prev === 0 ? sanpham.length - 1 : prev - 1));
     };
@@ -59,8 +76,8 @@ export const Sanphamlienquan = ({data_products}:props) => {
                                     <div className="title mb-[8px] ml-[8px] ">
                                         <div className="name_product text-[20px] font-[300] text-[#0C0C0C]  mt-[12px] group-hover:text-[blue]  ">{item.name}</div>
                                         <div className="price absolute bottom-0 w-[90%] flex justify-between mr-[8px]">
-                                            <s className="text-[20px] font-[400] text-[#717171]">{item.price - item.price*(item.discount/100)}</s>
-                                            <span className="price_2 text-[20px] font-[400] text-[#0C0C0C]">{item.price}</span>
+                                            <s className="text-[20px] font-[400] text-[#717171]">{item.price - item.price*(item.discount/100)}$</s>
+                                            <span className="price_2 text-[20px] font-[400] text-[#0C0C0C]">{item.price}$</span>
                                         </div>
                                     </div>
                                 </div>

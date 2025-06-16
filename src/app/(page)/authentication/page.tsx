@@ -1,10 +1,9 @@
 "use client"
 import {SuccessPage} from '@/app/Components/notification/susscess';
 import {WrongPage} from '@/app/Components/notification/wrong';
-import { Suspense, useState } from 'react';
+import {useState } from 'react';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation'
-import { title } from 'process';
 export default function LoginSignupForm() {
   const [isActive, setIsActive] = useState(false);
   const [success,setsuccess] = useState(false);
@@ -163,7 +162,7 @@ export default function LoginSignupForm() {
     setIsActive(false);
   };
 
-  const handleInputChange = (e:any) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -171,23 +170,32 @@ export default function LoginSignupForm() {
     }));
   };
 
-  const handleSubmitLogin = (e:any) => {
+  const handleSubmitLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("da chay vao day")
+    const target = e.target as typeof e.target & {
+      username: { value: string };
+      password: { value: string };
+    };
     const data = {
-      username: e.target.username.value, 
-      password: e.target.password.value
+      username: target.username.value, 
+      password: target.password.value
     } ; 
     setuser(data); 
   };
-  const handleSubmitRegister =(e:any) =>{
-    e.preventDefault();
-    const data = {
-      name: e.target.username.value,
-      email:e.target.username.value ,
-      password: e.target.password.value 
-  }
-  setRegister(data) ; 
+const handleSubmitRegister = (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  const target = e.target as typeof e.target & {
+    username: { value: string };
+    email: { value: string };
+    password: { value: string };
+  };
+  const data = {
+    name: target.username.value,
+    email: target.email.value,
+    password: target.password.value 
+  };
+  setRegister(data); 
 }
 
   return (
@@ -644,7 +652,7 @@ export default function LoginSignupForm() {
           <div className="toggle-box">
             <div className="toggle-panel toggle-left">
               <h1>Hello, Welcome!</h1>
-              <p>Don't have an account?</p>
+              <p>Don&apos;t have an account?</p>
               <button className="btn register-btn" onClick={handleRegisterClick}>
                 Register
               </button>

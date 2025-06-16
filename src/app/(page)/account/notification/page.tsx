@@ -38,7 +38,7 @@ export default function NotificationPage() {
                                 </div>
 
 
-                                <span className="text-[16px] font-light ">We write emails to let you know what's
+                                <span className="text-[16px] font-light ">We write emails to let you know what&apos;s
                                     important,
                                     like: new order, confirmations
                                 </span>
@@ -59,8 +59,13 @@ export default function NotificationPage() {
                                         <span className="text-[16px] font-medium">Push to your Device</span>
 
                                     </div>
-                                    <label className="fui-checkbox-toggle">
-                                        <input type="checkbox" id="toggle-input" className="toggle-input" />
+                                    <label className="fui-checkbox-toggle" htmlFor="push-device-toggle">
+                                        <input
+                                            type="checkbox"
+                                            id="push-device-toggle"
+                                            className="toggle-input"
+                                            aria-label="Toggle push notifications to your device"
+                                        />
                                         <div className="toggle-bar">
                                             <div className="toggle-spin"></div>
                                         </div>
@@ -98,8 +103,14 @@ export default function NotificationPage() {
                                         <span className="text-[16px] font-medium">Oder Delivered</span>
 
                                     </div>
-                                    <label className="fui-checkbox-toggle">
-                                        <input type="checkbox" id="toggle-input" className="toggle-input" />
+                                    <label className="fui-checkbox-toggle" htmlFor="order-delivered-toggle">
+                                        <input
+                                            type="checkbox"
+                                            id="order-delivered-toggle"
+                                            className="toggle-input"
+                                            aria-label="Toggle order delivered notifications"
+                                            title="Toggle order delivered notifications"
+                                        />
                                         <div className="toggle-bar">
                                             <div className="toggle-spin"></div>
                                         </div>
@@ -130,11 +141,17 @@ export default function NotificationPage() {
                                                 fill="#292D32" />
                                         </svg>
 
-                                        <span className="text-[16px] font-medium">Product's availibilty</span>
+                                        <span className="text-[16px] font-medium">Product&apos;s availibilty</span>
 
                                     </div>
                                     <label className="fui-checkbox-toggle">
-                                        <input type="checkbox" id="toggle-input" className="toggle-input" />
+                                        <input
+                                            type="checkbox"
+                                            id="toggle-input"
+                                            className="toggle-input"
+                                            aria-label="Toggle product availability notifications"
+                                            title="Toggle product availability notifications"
+                                        />
                                         <div className="toggle-bar">
                                             <div className="toggle-spin"></div>
                                         </div>

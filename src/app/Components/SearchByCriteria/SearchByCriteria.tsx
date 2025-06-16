@@ -3,10 +3,10 @@ import { BoxChat } from "../BoxChat/BoxChat";
 import { useState, useCallback, useEffect } from 'react';
 import { Star, Heart, ShoppingCart, Filter, SortAsc } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { usePathname } from 'next/navigation';
 import { getCookie } from "@/app/function/GetCookie/GetCookie";
 import { AddCartPage } from "../notification/addCart";
 import { WrongPage } from "../notification/wrong";
+import { types } from "util";
 const LoadingThreeDotsJumping = () => (
   <div className="flex space-x-2">
     <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
@@ -14,8 +14,30 @@ const LoadingThreeDotsJumping = () => (
     <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce"></div>
   </div>
 );
+type data  = {
+    _id: number ; 
+    name:string ; 
+    image:string ; 
+    description:string ; 
+    rating:number ; 
+    price:number ; 
+    countInStock:number ; 
+    discount:number; 
+    ram?:string ; 
+    screen_size?:string ; 
+    processor?:string ; 
+    gpu_brand?:string ; 
+    drive_size?:string ; 
+    brand:number ; 
+    category:number ; 
+}
+type itemsSearch = 
+    {
+        name: string | null, 
+        id: string | null,
+    }
 type Props = {
-    data_products: { products: any[] };
+    data_products: { products: data[] };
 }
 export const SearchByCriteria = ({data_products}: Props) => {
     const products = data_products?.products || [];
@@ -23,10 +45,9 @@ export const SearchByCriteria = ({data_products}: Props) => {
     const [sortBy, setSortBy] = useState('price_asc');
     const [favorites, setFavorites] = useState(new Set());
     const router = useRouter() ; 
-    const pathname = usePathname() ;
     const [wrong , setWrong] = useState(false);
     const [success,setSuccess] = useState(false) ; 
-    const [sanpham, setsanpham] = useState<any[]>([]);
+    const [sanpham, setsanpham] = useState<data[]>([]);
     const data_wrong =  
     {
         title : "Bạn chưa đăng nhập" 
@@ -87,7 +108,7 @@ export const SearchByCriteria = ({data_products}: Props) => {
         }, 1000);
     }, [router,setLoading]);
     useEffect(() => {
-    let sortedProducts = [...products]; 
+    const sortedProducts = [...products]; 
     if (sortBy === "price_asc") {
         sortedProducts.sort((a, b) => a.price - b.price);
     } else if (sortBy === "price_desc") {
@@ -97,9 +118,9 @@ export const SearchByCriteria = ({data_products}: Props) => {
     } else if (sortBy === "discount_desc") {
         sortedProducts.sort((a, b) => b.discount - a.discount);
     } else if (sortBy === "rate_asc") {
-        sortedProducts.sort((a, b) => a.rate - b.rate);
+        sortedProducts.sort((a, b) => a.rating - b.rating);
     } else if (sortBy === "rate_desc") {
-        sortedProducts.sort((a, b) => b.rate - a.rate);
+        sortedProducts.sort((a, b) => b.rating - a.rating);
     }
     setsanpham(sortedProducts);
 }, [sortBy, products]);
@@ -130,13 +151,9 @@ export const SearchByCriteria = ({data_products}: Props) => {
             />
         ));
     };
-    const dataSearch:any = [] ;
-    const [data, setData] = useState<any[]>(dataSearch);
-    const itemSearch:any = 
-    {
-        "name": null , 
-        "id": null,
-    }
+    const dataSearch: itemsSearch[] = [];
+    const [data, setData] = useState<itemsSearch[]>(dataSearch);
+    const itemSearch: itemsSearch = { name: null, id: null };
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         console.log("e.target.name", e.target.name);
         console.log("e.target.checked", e.target.checked);
@@ -181,15 +198,15 @@ export const SearchByCriteria = ({data_products}: Props) => {
         if(token)
         { 
             const add_cart = async() =>{
-                    const res = await fetch(`https://ecommerce-django-production-7581.up.railway.app/api/orders/addtocart/${id}/`,{
+                 await fetch(`https://ecommerce-django-production-7581.up.railway.app/api/orders/addtocart/${id}/`,{
                         method: 'POST',
                         headers: {
                         "Content-Type": "application/json",
                         'Authorization':`Bearer ${token}` , 
                     },
                     })
-                    const data = await res.json();
-                    console.log("tao ở đây") ; 
+                    
+                
                 }
                 add_cart() ;
             setSuccess(true) ; 
@@ -223,12 +240,12 @@ export const SearchByCriteria = ({data_products}: Props) => {
             <div className="flex gap-[8px] flex-wrap">
                 {
                 data.length >0 &&
-                data.map((item: any, index: number) =>
+                data.map((item: itemsSearch, index: number) =>
                     (
                         <>
                             <div className="flex   items-center gap-[8px] bg-[#F2F2F2] rounded-[8px] px-[10px] py-[4px] justify-between w-[133px] h-[40px]" key={index}>
                                 <div className="text-[16px] font-[600] text-[#0C0C0C]">{item.name}</div>
-                                <button onClick={handleClick} name={item.id} aria-label="Xóa bộ lọc">x</button>
+                                <button onClick={handleClick} name={item.id ?? ''} aria-label="Xóa bộ lọc">x</button>
                             </div>
                         </>
                         

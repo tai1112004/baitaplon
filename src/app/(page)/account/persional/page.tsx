@@ -5,13 +5,12 @@ import {WrongPage} from "@/app/Components/notification/wrong";
 import { getCookie } from "@/app/function/GetCookie/GetCookie";
 import { useEffect } from "react";
 import {useState} from "react";
-export default function PersionalPage() {
-    const [token , settoken ]= useState(getCookie("token"));
-    interface User {
+type User =  {
         name?: string;
         email?: string;
-        [key: string]: any;
     }
+export default function PersionalPage() {
+    const token =getCookie("token");
     const [user , setuser] = useState<User>({});
     const datasuccess ={
         "title" :  "Đã thay đổi thành công"
@@ -78,7 +77,7 @@ useEffect(()=>{
     }
     update();
 },[user_update])
-    const handleSubmit = (e:any) =>{
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) =>{
         e.preventDefault(); 
         const username = user.name ;
         const email = user.email ;
@@ -191,9 +190,10 @@ useEffect(()=>{
 
                             
                             <div id="popupName"className="fixed inset-0 flex items-center justify-center  bg-opacity-100 backdrop-blur-xs hidden">
-                                <form className="bg-white p-6 rounded-md shadow-md w-[392px] h-[210px]" onSubmit={(e:any)=>{
+                                <form className="bg-white p-6 rounded-md shadow-md w-[392px] h-[210px]" onSubmit={(e:React.FormEvent<HTMLFormElement>)=>{
                                         e.preventDefault() ; 
-                                        const name = e.target.name.value ;
+                                        const form = e.target as HTMLFormElement;
+                                        const name = (form.elements.namedItem("name") as HTMLInputElement)?.value;
                                         if(name)
                                         {
                                             setuser(
@@ -212,7 +212,7 @@ useEffect(()=>{
                                 }} >
                                     <h2 className="text-lg font-semibold">Edit Full Name</h2>
                                     <input id="NameInput" type="text" className="border p-2 w-full mt-2 rounded-md" placeholder="Nhập tên mới..." name = "name" 
-                                    defaultValue={user.username} />
+                                    defaultValue={user.name} />
                                     <div className="flex justify-end gap-2 mt-4">
                                         <button id="cancelNameBtn" className="bg-gray-500 text-white px-4 py-2 rounded-md" type="button" onClick={()=>{
                                             const editname = document.getElementById("popupName") ;
@@ -285,9 +285,10 @@ useEffect(()=>{
                            
                             <div id="popupEmail"
                                 className="fixed inset-0 flex items-center justify-center  bg-opacity-100 backdrop-blur-xs hidden">
-                                <form className="bg-white p-6 rounded-md shadow-md w-[392px] h-[210px]" onSubmit={(e:any)=>{
+                                <form className="bg-white p-6 rounded-md shadow-md w-[392px] h-[210px]" onSubmit={(e:React.FormEvent<HTMLFormElement>)=>{
                                         e.preventDefault() ; 
-                                        const email = e.target.email.value ;
+                                        const form = e.target as HTMLFormElement;
+                                        const email = (form.elements.namedItem("email") as HTMLInputElement)?.value;
                                         if(email)
                                         {
                                             setuser(
@@ -412,9 +413,10 @@ useEffect(()=>{
                             </div>
                             <div id="popupPassword"
                                 className="fixed inset-0 flex items-center justify-center  bg-opacity-100 backdrop-blur-xs hidden">
-                                <form className="bg-white p-6 rounded-md shadow-md w-[392px] h-[210px]" onSubmit={(e:any)=>{
+                                <form className="bg-white p-6 rounded-md shadow-md w-[392px] h-[210px]" onSubmit={(e:React.FormEvent<HTMLFormElement>)=>{
                                         e.preventDefault() ; 
-                                        const password = e.target.password.value ;
+                                        const form = e.target as HTMLFormElement;
+                                        const password = (form.elements.namedItem("password") as HTMLInputElement)?.value;
                                         if(password)
                                         {
                                             setUpdate(

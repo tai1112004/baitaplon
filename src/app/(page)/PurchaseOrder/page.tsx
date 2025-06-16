@@ -1,8 +1,7 @@
 "use client"
 import DescriptionAlerts from "@/app/Components/Alert/Alert_Purhase/Alert_purchase";
 import { getCookie } from "@/app/function/GetCookie/GetCookie";
-import { useParams, useRouter } from "next/navigation";
-import { stringify } from "querystring";
+import {  useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 type OrderItem = {
     image: string;
@@ -16,19 +15,6 @@ type OrderItem = {
 export default function PurchaseOrder() { 
         const [dataOrder, setdata] = useState<OrderItem[]>([]) ; 
         const token = getCookie("token") ; 
-        const [inforUser,setInfor] = useState({
-            paymentMethod: "cash" ,
-            taxPrice: 20 , 
-            shippingPrice: 20, 
-            totalPrice: 20 , 
-            shippingAddress : {
-                address: null,
-                city : "Ha Noi" , 
-                postalCode: "lololo" ,
-                country: "vn" ,
-            },
-            receiver:null ,
-        }) ;
         useEffect(()=>{
             if(token)
             {
@@ -55,10 +41,11 @@ export default function PurchaseOrder() {
     const router = useRouter();
     const [progress, setProgress] = useState(0);
 
-    const hanldeBuyProduct = (e: any) => {
+    const hanldeBuyProduct = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const user = e.target.user.value ; 
-        const address = e.target.address.value ;
+        const form = e.target as HTMLFormElement;
+        const user = form.user.value; 
+        const address = form.address.value;
         setAlert(true);
         setProgress(0);
         if(token)
@@ -142,7 +129,7 @@ export default function PurchaseOrder() {
                             <h2 className="font-[500] text-[#0C0C0C] text-[24px]">Your Order</h2>
                             <div className="product flex flex-col gap-[16px] mt-[16px] h-[350px] overflow-scroll">
                                 {
-                                    dataOrder.map((items,index)=>{
+                                    dataOrder.map((items)=>{
                                         return (
                                             <>
                                                 <div className="productItem flex px-[6px] border-b-[1px] border-b-[#CBCBCB] gap-[10px]">

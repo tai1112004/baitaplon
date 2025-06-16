@@ -1,6 +1,6 @@
 import Lottie from 'react-lottie-player'
 import NullAnimation from '../../../../public/animations/nullAnimation.json'
-import { div } from 'motion/react-client'
+
 
 export  const NullPage= ()=> {
   

@@ -2,21 +2,21 @@
 import { BsChatDots } from "react-icons/bs";
 import { RiSendPlaneFill } from "react-icons/ri";
 import {useState} from "react";
-export const BoxChat =()=>{
-    const dataBoxChat:any=[] ; 
-    const dataChat ={
-        "name":null , 
-        "content": null , 
-    }
-    const [chat, setchat]  = useState(dataBoxChat);
+type dataChat = {
+    name: string | null;
+    content: string | null;
+}
+export const BoxChat =()=>{ 
+    
+    const [chat, setchat]  = useState<dataChat[]>([]);
     const handleClick = () => {
         console.log('Button clicked');
         const chatBox = document.getElementsByClassName('chat')[0];
         chatBox.classList.toggle('hidden'); 
     }
-    const handleSubmit = (e:any) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const input = e.target.querySelector('input');
+        const input = (e.target as HTMLFormElement).querySelector('input') as HTMLInputElement;
         if (input.value.trim() !== '') {
             const newMessage = {
                 name: "USER", // You can replace this with the actual user's name
@@ -40,7 +40,7 @@ export const BoxChat =()=>{
                     <div className="content-chat px-[16px] pt-[24px] pb-[16px] h-[400px] overflow-y-auto w-[100%] ">
                         <p className="text-[#2D2D2D] text-[20px] font-[300]">xin chào bạn đã đến với trang web mua hàng của chúng tôi , bạn cần giúp đỡ gì , chúng tôi sẽ cố gắng trả lời bạn sớm nhất có thể</p>
                         {
-                            chat.map((item: any, index: number) => (
+                            chat.map((item: dataChat, index: number) => (
                                 item.name === "USER" ? (
                                     <div className="box flex justify-end mb-[5px]" key={index} >
                                         <div className="content text-[18px] font-[300] w-[50%] bg-[blue] text-white text-start px-[10px] py-[10px] rounded-[20px] ">{item.content}</div>
