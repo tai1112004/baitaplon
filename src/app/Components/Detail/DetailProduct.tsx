@@ -18,7 +18,7 @@ import { LoadingPage } from "../notification/loading";
 type props = {
     category : string ; 
 };
-type   dataCommnents=
+type dataCommnents=
 {
     name: string ;
     image : string ; 
@@ -66,7 +66,23 @@ export const DetailComputer = ({category}:props) =>{
     const id = parseInt(params.id)  ;
     const asPathname = usePathname();
     
-    const [data_itemProduct, setdata] = useState<data>({});
+    const [data_itemProduct, setdata] = useState<data>({
+  _id: 0,
+  name: "",
+  image: "",
+  description: "",
+  rating: 0,
+  price: 0,
+  countInStock: 0,
+  discount: 0,
+  ram: "",
+  screen_size: "",
+  processor: "",
+  gpu_brand: "",
+  drive_size: "",
+  brand: 0,
+  category: 0,
+});
     const [product,setproduct] = useState([]) ; 
     const [wrong, setwrong] = useState(false) ; 
     const [loading, setloading] = useState(false) ;
