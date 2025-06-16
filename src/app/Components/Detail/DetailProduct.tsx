@@ -49,7 +49,7 @@ export const DetailComputer = ({category}:props) =>{
     const id = parseInt(params.id)  ;
     const asPathname = usePathname();
     type Product = {
-        _id?: number;
+        id?: number;
         name?: string;
         image?: string;
         price?: number;
@@ -479,7 +479,7 @@ export const DetailComputer = ({category}:props) =>{
                 </h2>
                 <Sanphamlienquan data_products={{
                     products: (product as Product[]).map((item: Product) => ({
-                        _id: item._id ?? 0,
+                        _id: item.id ?? 0,
                         name: item.name ?? "",
                         image: item.image ?? "",
                         price: item.price ?? 0,
