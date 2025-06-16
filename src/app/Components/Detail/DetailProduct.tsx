@@ -43,29 +43,30 @@ type   dataCommnents=
 //     countInStock: number;
 //     category: string;
 // };
+type data  = {
+    _id: number ; 
+    name:string ; 
+    image:string ; 
+    description:string ; 
+    rating:number ; 
+    price:number ; 
+    countInStock:number ; 
+    discount:number; 
+    ram?:string ; 
+    screen_size?:string ; 
+    processor?:string ; 
+    gpu_brand?:string ; 
+    drive_size?:string ; 
+    brand:number ; 
+    category:number ; 
+}
 export const DetailComputer = ({category}:props) =>{
     const router = useRouter() ; 
     const params= useParams<{id:string}>(); 
     const id = parseInt(params.id)  ;
     const asPathname = usePathname();
-    type Product = {
-        id?: number;
-        name?: string;
-        image?: string;
-        price?: number;
-        discount?: number;
-        brand?: string;
-        screen_size?: string;
-        drive_size?: string;
-        processor?: string;
-        ram?: string;
-        gpu_brand?: string;
-        description?: string;
-        rating?: number;
-        countInStock?: number;
-        category?: string;
-    };
-    const [data_itemProduct, setdata] = useState<Product>({});
+    
+    const [data_itemProduct, setdata] = useState<data>({});
     const [product,setproduct] = useState([]) ; 
     const [wrong, setwrong] = useState(false) ; 
     const [loading, setloading] = useState(false) ;
@@ -477,25 +478,7 @@ export const DetailComputer = ({category}:props) =>{
                 <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
                     Sản phẩm liên quan
                 </h2>
-                <Sanphamlienquan data_products={{
-                    products: (product as Product[]).map((item: Product) => ({
-                        _id: item.id ?? 0,
-                        name: item.name ?? "",
-                        image: item.image ?? "",
-                        price: item.price ?? 0,
-                        discount: item.discount ?? 0,
-                        brand: item.brand ?? "",
-                        screen_size: item.screen_size ?? "",
-                        drive_size: item.drive_size ?? "",
-                        processor: item.processor ?? "",
-                        ram: item.ram ?? "",
-                        gpu_brand: item.gpu_brand ?? "",
-                        description: item.description ?? "",
-                        rating: item.rating ?? 0,
-                        countInStock: item.countInStock ?? 0,
-                        category: item.category ?? category
-                    }))
-                }}/>
+                <Sanphamlienquan data_products={{ products: product as data[] }} /> 
             </div>
 
             {/* Comments Section */}
