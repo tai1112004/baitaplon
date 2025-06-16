@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { getCookie } from "@/app/function/GetCookie/GetCookie";
 import { AddCartPage } from "../notification/addCart";
 import { WrongPage } from "../notification/wrong";
-import { types } from "util";
 const LoadingThreeDotsJumping = () => (
   <div className="flex space-x-2">
     <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>

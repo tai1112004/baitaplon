@@ -5,7 +5,7 @@ import { useEffect } from "react"
 import { useRouter } from "next/navigation";
 import { LoadingPage } from "@/app/Components/notification/loading";
 import { NullPage } from "@/app/Components/notification/null";
-import Link from "next/link";
+
 // type item = {
 //     image :string , 
 //     name :string 

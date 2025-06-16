@@ -26,13 +26,30 @@ type   dataCommnents=
     content:string ; 
     date: string  ; 
 } ;
+// type data = {
+//     _id: number;
+//     name: string;
+//     image: string;
+//     price: number;
+//     discount: number;
+//     brand: string; // Changed from number to string
+//     screen_size: string;
+//     drive_size: string;
+//     processor: string;
+//     ram: string;
+//     gpu_brand: string;
+//     description: string;
+//     rating: number;
+//     countInStock: number;
+//     category: string;
+// };
 export const DetailComputer = ({category}:props) =>{
     const router = useRouter() ; 
     const params= useParams<{id:string}>(); 
     const id = parseInt(params.id)  ;
     const asPathname = usePathname();
     type Product = {
-        id?: number;
+        _id?: number;
         name?: string;
         image?: string;
         price?: number;
@@ -45,6 +62,8 @@ export const DetailComputer = ({category}:props) =>{
         gpu_brand?: string;
         description?: string;
         rating?: number;
+        countInStock?: number;
+        category?: string;
     };
     const [data_itemProduct, setdata] = useState<Product>({});
     const [product,setproduct] = useState([]) ; 
@@ -121,7 +140,7 @@ export const DetailComputer = ({category}:props) =>{
     },[quantity])
     const arrayurl = asPathname.split("/"); 
   
-    const [check, useCheck] = useState<dataCommnents[]>([]) ; 
+    const [check, setCheck] = useState<dataCommnents[]>([]) ; 
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) =>
     {
@@ -138,7 +157,7 @@ export const DetailComputer = ({category}:props) =>{
                 "rating": userRating,
                 "date": new Date().toLocaleDateString('vi-VN')
             }
-            useCheck([...check,newComment]) ;
+            setCheck([...check,newComment]) ;
             (e.target as HTMLFormElement).comments.value = null ;
             setUserRating(0);
             setHoveredRating(0);
@@ -459,8 +478,8 @@ export const DetailComputer = ({category}:props) =>{
                     Sản phẩm liên quan
                 </h2>
                 <Sanphamlienquan data_products={{
-                    products: (product as Product[]).map((item: any) => ({
-                        _id: item.id ?? 0,
+                    products: (product as Product[]).map((item: Product) => ({
+                        _id: item._id ?? 0,
                         name: item.name ?? "",
                         image: item.image ?? "",
                         price: item.price ?? 0,
