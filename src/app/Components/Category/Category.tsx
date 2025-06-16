@@ -10,8 +10,8 @@ import { FaGamepad } from "react-icons/fa";
 import { FaNetworkWired } from "react-icons/fa";
 import { usePathname } from "next/navigation";
 import {useState} from 'react';
-import LoadingThreeDotsJumping from "../loading/loading";
 import { useRouter } from "next/navigation";
+import { LoadingPage } from "../notification/loading";
 export const Category = () => {
     const pathname = usePathname();
 
@@ -79,9 +79,7 @@ export const Category = () => {
     return (
         <>
             {loading && (
-                <div className="fixed inset-0 z-[9999] flex items-center justify-center  bg-opacity-70 backdrop-blur">
-                    <LoadingThreeDotsJumping />
-                </div>
+                <LoadingPage/>
             )}
             <div className="category flex  items-center w-[100%] mt-[40px] mb-[48px] gap-[16px] ml-[30px] justify-between">
                 {

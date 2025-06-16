@@ -7,14 +7,23 @@ import { useEffect } from "react";
 import {useState} from "react";
 export default function PersionalPage() {
     const [token , settoken ]= useState(getCookie("token"));
-    const [user , setuser] = useState({});
+    interface User {
+        name?: string;
+        email?: string;
+        [key: string]: any;
+    }
+    const [user , setuser] = useState<User>({});
     const datasuccess ={
         "title" :  "Đã thay đổi thành công"
     }
     const datawrong ={
         "title" :  "Tên tài khoản hoặc email của bạn đã có người khác đăng kí trước"
     }
-    const [user_update,setUpdate] = useState({
+    const [user_update, setUpdate] = useState<{
+        name: string | null,
+        email: string | null,
+        password: string | null,
+    }>({
         name: null,
         email: null,
         password: null,
@@ -76,8 +85,8 @@ useEffect(()=>{
         setUpdate(
             { 
                 ... user_update ,
-                name : username , 
-                email: email 
+                name : username ?? null, 
+                email: email ?? null
                
 
             }
@@ -154,13 +163,19 @@ useEffect(()=>{
 
 
 
-                                    <button id="editNameBtn" className="cursor-pointer" onClick={()=>{
-                                        const editname = document.getElementById("popupName")
-                                        if(editname)
-                                        {
-                                            editname.classList.remove("hidden") ; 
-                                        }
-                                    }}>
+                                    <button
+                                        id="editNameBtn"
+                                        className="cursor-pointer"
+                                        onClick={()=>{
+                                            const editname = document.getElementById("popupName")
+                                            if(editname)
+                                            {
+                                                editname.classList.remove("hidden") ; 
+                                            }
+                                        }}
+                                        title="Chỉnh sửa tên"
+                                        aria-label="Chỉnh sửa tên"
+                                    >
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path
@@ -240,7 +255,13 @@ useEffect(()=>{
                                         </p>
                                     </div>
 
-                                    <button id="editEmailBtn" className="cursor-pointer"><svg width="24" height="24"
+                                    <button
+                                        id="editEmailBtn"
+                                        className="cursor-pointer"
+                                        title="Chỉnh sửa email"
+                                        aria-label="Chỉnh sửa email"
+                                    >
+                                        <svg width="24" height="24"
                                             viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={()=>{
                                         const editemail = document.getElementById("popupEmail")
                                         if(editemail)
@@ -319,7 +340,12 @@ useEffect(()=>{
                                         </p>
                                     </div>
 
-                                    <button id="editPhoneBtn" className="cursor-pointer"><svg width="24" height="24"
+                                    <button
+                                        id="editPhoneBtn"
+                                        className="cursor-pointer"
+                                        title="Chỉnh sửa số điện thoại"
+                                        aria-label="Chỉnh sửa số điện thoại"
+                                    ><svg width="24" height="24"
                                             viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path
                                                 d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
@@ -357,7 +383,12 @@ useEffect(()=>{
                                         </p>
                                     </div>
 
-                                    <button id="editPasswordBtn" className="cursor-pointer"><svg width="24" height="24"
+                                    <button
+                                        id="editPasswordBtn"
+                                        className="cursor-pointer"
+                                        title="Chỉnh sửa mật khẩu"
+                                        aria-label="Chỉnh sửa mật khẩu"
+                                    ><svg width="24" height="24"
                                             viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={()=>{
                                         const editPassword = document.getElementById("popupPassword")
                                         if(editPassword)
@@ -438,7 +469,12 @@ useEffect(()=>{
                                         </p>
                                     </div>
 
-                                    <button id="editAddressBtn" className="cursor-pointer"><svg width="24" height="24"
+                                    <button
+                                        id="editAddressBtn"
+                                        className="cursor-pointer"
+                                        title="Chỉnh sửa địa chỉ"
+                                        aria-label="Chỉnh sửa địa chỉ"
+                                    ><svg width="24" height="24"
                                             viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path
                                                 d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
@@ -499,7 +535,12 @@ useEffect(()=>{
                                         </p>
                                     </div>
 
-                                    <button id="editPostalcodeBtn" className="cursor-pointer"><svg width="24" height="24"
+                                    <button
+                                        id="editPostalcodeBtn"
+                                        className="cursor-pointer"
+                                        title="Chỉnh sửa mã bưu điện"
+                                        aria-label="Chỉnh sửa mã bưu điện"
+                                    ><svg width="24" height="24"
                                             viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path
                                                 d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"

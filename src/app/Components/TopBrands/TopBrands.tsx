@@ -20,9 +20,6 @@ export const TopBrands = () => {
                     
 
                 </div>
-
-            
-
             </div>
         </>
     )

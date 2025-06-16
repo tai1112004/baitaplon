@@ -1,4 +1,5 @@
 import Link from "next/link" 
+import React from "react";
 
 export const Section2 =()=>{
     const data = [
@@ -41,9 +42,10 @@ export const Section2 =()=>{
                 <div className="product_wrap flex justify-between items-center  ">
               
                         {
-                            data.map((item, index) =>(
+                            data.map((item, index :number) =>(
                                 <>
-                                <Link href={item.link}>
+                                
+                                <Link href={item.link} key={index}>
                                     <div className="product_item_wrap border-[1px] border-[#E5E5E5] rounded-[10px] group " key={index}>
                                     <div className="product_item_image my-[18px] mx-[8px]  rounded-[10px] flex justify-center items-center">
                                         <img src={item.image} alt="" className="w-[148px] h-[148px]" />
@@ -52,7 +54,7 @@ export const Section2 =()=>{
                                 </div>
 
                                 </Link>
-                                    
+                                
                                 </>
                             ))
                         }
@@ -61,5 +63,4 @@ export const Section2 =()=>{
                    
                 </div>
         </>
-    )
-}
+    )}

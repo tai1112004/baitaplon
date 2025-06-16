@@ -3,6 +3,8 @@ import { useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import { CiCircleChevLeft, CiCircleChevRight } from "react-icons/ci";
 
+import styles from './Section3.module.css';
+
 export const Section3 = () => {
     const data = [
         {
@@ -75,11 +77,11 @@ export const Section3 = () => {
 
     return (
         <>
-            <div className="section3 mt-[56px] bg-[#063A88] rounded-[10px]">
+             <div className="section3 mt-[56px] bg-[#063A88] rounded-[10px]">
                 <div className="inner_wrap flex relative ">
                     <div className="content w-[20%]">
                         <h2 className="title items-center text-center mt-[60px] ">
-                            <span className="text-white font-[500] text-[24px] ">Products On Sale</span>
+                            <span className="text-white font-[500] text-[24px] ">Sản phẩm Liên quan</span>
                             <span className="text-white font-[300] text-[24px] flex justify-center "> Shop Now!</span>
                         </h2>
                         <div className="description mt-[80px] flex justify-center items-center">

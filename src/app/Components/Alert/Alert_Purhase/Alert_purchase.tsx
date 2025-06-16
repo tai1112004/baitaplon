@@ -10,7 +10,6 @@ export default function DescriptionAlerts({ progress }: { progress: number }) {
       <Alert severity="success">
         <AlertTitle>Success</AlertTitle>
         Cảm ơn bạn đã mua hàng của chúng tôi.
-        
       </Alert>
       <LinearProgress
           variant="determinate"

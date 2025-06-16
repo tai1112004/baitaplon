@@ -17,9 +17,7 @@ export function LayoutWrapper({children}: Readonly<{children: React.ReactNode;}>
                     
                     {children}
                     
-                    </div>
-                    
-               
+                    </div>           
         );
     }
     if(layoutPageAdd.includes(Pathname))

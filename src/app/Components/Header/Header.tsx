@@ -19,11 +19,16 @@ import { AiOutlineDollarCircle } from "react-icons/ai";
 import { SlLogout } from "react-icons/sl";
 import { LoadingPage } from "../notification/loading";
 
+type UserProfile = {
+    username?: string;
+    // add other properties if needed
+};
+
 export const Header = () => {
     const [search, setSearch] = useState(false);
     const [loading, setloading] = useState(false);
     const [islogin,setlogin]=useState(false) ; 
-    const [data,setdata] = useState({});
+    const [data,setdata] = useState<UserProfile>({});
     const [count_cart,setCount] = useState(0) ; 
     const pathname = usePathname() ; 
     const router = useRouter() ; 
@@ -166,7 +171,7 @@ export const Header = () => {
                                 </li>
 
                             <li className=" size-[18px] font-[300] text-black" >
-                                <div rel="stylesheet" href="/blog" className="link_header" onClick={()=>handleClick_tranferPage("/blog")}>Blog 
+                                <div rel="stylesheet" className="link_header" onClick={()=>handleClick_tranferPage("/blog")}>Blog 
                                 </div>
                                 </li>
                             <li className=" size-[18px] font-[300] text-black">

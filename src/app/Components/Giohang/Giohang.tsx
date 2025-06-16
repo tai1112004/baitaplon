@@ -23,7 +23,11 @@ import { Truck, Award, Trash2, Plus, Minus, ShoppingBag, Package, CreditCard } f
 // );
 
 // Error notification  
-const WrongPage = ({ data }) => (
+type WrongPageProps = {
+  data: { title: string };
+};
+
+const WrongPage = ({ data }: WrongPageProps) => (
   <div className="fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-bounce">
     <div className="flex items-center gap-2">
       <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center">!</div>
@@ -42,10 +46,19 @@ const PageLoading = () => (
     </div>
   </div>
 );
+type CartItem = {
+    product: number;
+    name: string;
+    image: string;
+    price: number;
+    qty: number;
+    // add other properties if needed
+};
+
 export const Giohang =() =>{
     const [loading,setloading] = useState(false);
     const [loading1,setloading1] = useState(false);
-    const [data,setData] = useState([]);
+    const [data,setData] = useState<CartItem[]>([]);
     const [del,setdel] = useState(false);
     const [wrong , setwrong] = useState(false);
     const data_wrong = {
@@ -244,6 +257,8 @@ export const Giohang =() =>{
                                                             <button
                                                                 onClick={() => handleClickDelete(item.product)}
                                                                 className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors duration-200"
+                                                                aria-label="Xóa sản phẩm khỏi giỏ hàng"
+                                                                title="Xóa sản phẩm khỏi giỏ hàng"
                                                             >
                                                                 <Trash2 className="w-5 h-5" />
                                                             </button>
@@ -254,6 +269,7 @@ export const Giohang =() =>{
                                                                     onClick={() => handleClickReduce(index)}
                                                                     disabled={item.qty <= 1}
                                                                     className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                                                                    title="Giảm số lượng"
                                                                 >
                                                                     <Minus className="w-4 h-4" />
                                                                 </button>
@@ -263,6 +279,7 @@ export const Giohang =() =>{
                                                                 <button
                                                                     onClick={() => handleClickIncrease(index)}
                                                                     className="p-2 hover:bg-gray-50 transition-colors duration-200"
+                                                                    title="Tăng số lượng"
                                                                 >
                                                                     <Plus className="w-4 h-4" />
                                                                 </button>

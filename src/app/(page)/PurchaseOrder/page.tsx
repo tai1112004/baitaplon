@@ -4,8 +4,17 @@ import { getCookie } from "@/app/function/GetCookie/GetCookie";
 import { useParams, useRouter } from "next/navigation";
 import { stringify } from "querystring";
 import { useEffect, useState } from "react";
+type OrderItem = {
+    image: string;
+    name: string;
+    price: number;
+    discount: number;
+    qty: number;
+    // add other properties if needed
+};
+
 export default function PurchaseOrder() { 
-        const [dataOrder,setdata] = useState([]) ; 
+        const [dataOrder, setdata] = useState<OrderItem[]>([]) ; 
         const token = getCookie("token") ; 
         const [inforUser,setInfor] = useState({
             paymentMethod: "cash" ,

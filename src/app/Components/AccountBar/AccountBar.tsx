@@ -12,9 +12,6 @@ export const AccountBar= ()=>{
     },[link])
         
     
-    
-    console.log(link) ; 
-    
 
     return (
         <>

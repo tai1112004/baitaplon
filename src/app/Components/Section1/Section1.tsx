@@ -12,8 +12,11 @@ export const Section1=()=>{
                                 join the <p className="text-[#F45E0C] mx-[10px]"> digital revolution </p> with us
                             </div>
                         </h2>
-                        <button className="btn text-[#FFFFFF] font-[500] text-[20px] w-[300px] h-[60px] bg-[#F45E0C] rounded-[10px] flex justify-center items-center button_add_cart">
-                            <a href="/products">Explore More</a>
+                        <button
+                            className="btn text-[#FFFFFF] font-[500] text-[20px] w-[300px] h-[60px] bg-[#F45E0C] rounded-[10px] flex justify-center items-center button_add_cart"
+                            onClick={() => window.location.href = "/products"}
+                        >
+                            Explore More
                         </button>
                         
                     </div>

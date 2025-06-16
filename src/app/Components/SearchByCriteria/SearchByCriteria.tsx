@@ -228,7 +228,7 @@ export const SearchByCriteria = ({data_products}: Props) => {
                         <>
                             <div className="flex   items-center gap-[8px] bg-[#F2F2F2] rounded-[8px] px-[10px] py-[4px] justify-between w-[133px] h-[40px]" key={index}>
                                 <div className="text-[16px] font-[600] text-[#0C0C0C]">{item.name}</div>
-                                <button onClick={handleClick} name={item.id}>x</button>
+                                <button onClick={handleClick} name={item.id} aria-label="Xóa bộ lọc">x</button>
                             </div>
                         </>
                         
@@ -404,6 +404,7 @@ export const SearchByCriteria = ({data_products}: Props) => {
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
                             className="px-4 py-2 bg-white border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                            aria-label="Sắp xếp sản phẩm"
                         >
                             <option value="price_asc">Giá: Thấp đến Cao</option>
                             <option value="price_desc">Giá: Cao đến Thấp</option>
@@ -438,6 +439,8 @@ export const SearchByCriteria = ({data_products}: Props) => {
                                         toggleFavorite(item._id);
                                     }}
                                     className="absolute top-4 right-4 z-10 p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-all duration-200 shadow-lg"
+                                    aria-label={favorites.has(item._id) ? "Bỏ yêu thích" : "Thêm vào yêu thích"}
+                                    title={favorites.has(item._id) ? "Bỏ yêu thích" : "Thêm vào yêu thích"}
                                 >
                                     <Heart 
                                         className={`w-5 h-5 transition-colors duration-200 ${

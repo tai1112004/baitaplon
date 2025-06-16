@@ -35,12 +35,10 @@ export const Section4 =() =>{
                         <div className="schedule flex flex-wrap gap-[16px] mb-[30px]" >
                             {
                                 schedule.map((item, index) => (
-                                    <>
-                                        <div className="item_schedule w-[49px] h-[46px] border-[#0C0C0C] border-[1px] rounded-t-[8px] text-center" key={item}>
-                                            <div className="date">{item.ngay}</div>
-                                            <div className="title">Days</div>
-                                        </div>
-                                    </>
+                                    <div className="item_schedule w-[49px] h-[46px] border-[#0C0C0C] border-[1px] rounded-t-[8px] text-center" key={index}>
+                                        <div className="date">{item.ngay}</div>
+                                        <div className="title">Days</div>
+                                    </div>
                                 ))
                             }
                         </div>

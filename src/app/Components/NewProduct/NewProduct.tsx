@@ -1,5 +1,6 @@
 import { TfiArrowCircleRight } from "react-icons/tfi";
 export const NewProduct = () => {
+
     const title = "New Products";
         const data = [
         {
@@ -49,7 +50,7 @@ export const NewProduct = () => {
                 <div className="w-[100%] bg-[#B4B4B4] mt-[16px] h-[1px] mb-[10px]"></div>
                 <div className="product mt-[32px] flex justify-between items-center w-[100%]">
                     {
-                        data.map((item, index) =>(
+                        data.map((item, index:number) =>(
                             <>
                                 <div className="product_item_wrap w-[288px] h-[400px] border-[#7171711F] border-[1px]  rounded-[8px] relative" key={index}>
                                     <div className="image w-[256px] h-[190px] mx-[16px] my-[16px]">

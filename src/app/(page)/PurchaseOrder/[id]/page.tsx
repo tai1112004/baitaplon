@@ -6,7 +6,20 @@ import { useEffect, useState } from "react";
 export default function PurchaseOrderID() {
     const param = useParams<{id:string}>(); 
     const id = parseInt(param.id) ; 
-    const [items,setdata] = useState({}) ; 
+    interface Item {
+        image: string;
+        name: string;
+        price: number;
+        discount: number;
+        // add other properties as needed
+    }
+    const [items, setdata] = useState<Item>({
+        image: "",
+        name: "",
+        price: 0,
+        discount: 0,
+        // initialize other properties as needed
+    });
     const token = getCookie("token") ; 
     const [inforUser,setInfor] = useState({
             paymentMethod: "cash" ,

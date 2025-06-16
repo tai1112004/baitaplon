@@ -54,8 +54,13 @@ export const BoxChat =()=>{
                         }
                     </div>
                     <form action="" className="flex items-center justify-between px-[16px] pb-[16px] border-t-[1px] border-[black] h-[72px]" onSubmit={handleSubmit}>
-                        <input type="text" className="h-[100%] outline-none"/>
-                        <button><RiSendPlaneFill className="w-[32px] h-[32px] text-[#0C68F4]"/></button>
+                        <input
+                            type="text"
+                            className="h-[100%] outline-none"
+                            placeholder="Nhập tin nhắn..."
+                            title="Nhập tin nhắn"
+                        />
+                        <button aria-label="Gửi tin nhắn" title="Gửi tin nhắn"><RiSendPlaneFill className="w-[32px] h-[32px] text-[#0C68F4]"/></button>
                     </form>
                 </div>
             </div>

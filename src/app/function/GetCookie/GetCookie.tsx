@@ -7,5 +7,6 @@ export function getCookie(name:string) {
       return part.split(';').shift();
     }
   }
+  
   return null;
 }

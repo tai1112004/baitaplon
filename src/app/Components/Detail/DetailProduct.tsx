@@ -26,7 +26,23 @@ export const DetailComputer = ({category}:props) =>{
     const id = parseInt(params.id)  ;
     const asPathname = usePathname();
     const [searchState, setSearchState] = useState("");
-    const [data_itemProduct,setdata] = useState({});
+    type Product = {
+        id?: number;
+        name?: string;
+        image?: string;
+        price?: number;
+        discount?: number;
+        brand?: string;
+        screen_size?: string;
+        drive_size?: string;
+        processor?: string;
+        ram?: string;
+        gpu_brand?: string;
+        description?: string;
+        rating?: number;
+        [key: string]: any;
+    };
+    const [data_itemProduct, setdata] = useState<Product>({});
     const [product,setproduct] = useState([]) ; 
     const [page,setpage] = useState(1) ;
     const [wrong, setwrong] = useState(false) ; 
@@ -51,7 +67,8 @@ export const DetailComputer = ({category}:props) =>{
         const data_product = async () =>{
             // Lấy 7 trang (2,3,4,5,6,7,8) = 56 sản phẩm
             const data = await fetch(`https://ecommerce-django-production-7581.up.railway.app/api/products/categories/${category}`)
-            setproduct(await data.json()) ; 
+            const json = await data.json();
+            setproduct(Array.isArray(json.products) ? json.products : []);
         }
         data_product() ; 
     },[])
@@ -71,10 +88,13 @@ export const DetailComputer = ({category}:props) =>{
         fetchData();
     },[token])
     useEffect(()=>{
-        if(data_itemProduct)
-        {
-            setPrice((data_itemProduct.price - data_itemProduct.price*(data_itemProduct.discount/100)) ) ;
-            setPriceTrue(data_itemProduct.price)
+        if (
+            data_itemProduct &&
+            typeof data_itemProduct.price === "number" &&
+            typeof data_itemProduct.discount === "number"
+        ) {
+            setPrice(data_itemProduct.price - data_itemProduct.price * (data_itemProduct.discount / 100));
+            setPriceTrue(data_itemProduct.price);
         }
     },[quantity])
     useEffect(() => {
@@ -87,10 +107,11 @@ export const DetailComputer = ({category}:props) =>{
     //     }
     // },[])
     useEffect(()=>{
-        if(data_itemProduct)
-        {
-            setPrice((data_itemProduct.price - data_itemProduct.price*(data_itemProduct.discount/100))*quantity)
-            setPriceTrue(data_itemProduct.price*quantity) ;
+        if (data_itemProduct) {
+            const price = data_itemProduct.price ?? 0;
+            const discount = data_itemProduct.discount ?? 0;
+            setPrice((price - price * (discount / 100)) * quantity);
+            setPriceTrue(price * quantity);
         }
             
         
@@ -303,10 +324,18 @@ export const DetailComputer = ({category}:props) =>{
                                 )}
                             </div>
                             <div className="flex gap-2">
-                                <button className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                                <button
+                                    className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                                    aria-label="Thêm vào danh sách yêu thích"
+                                    title="Thêm vào danh sách yêu thích"
+                                >
                                     <FiHeart className="w-5 h-5 text-gray-600" />
                                 </button>
-                                <button className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                                <button
+                                    className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                                    aria-label="Chia sẻ sản phẩm"
+                                    title="Chia sẻ sản phẩm"
+                                >
                                     <FiShare2 className="w-5 h-5 text-gray-600" />
                                 </button>
                             </div>
@@ -426,7 +455,7 @@ export const DetailComputer = ({category}:props) =>{
                 <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
                     Sản phẩm liên quan
                 </h2>
-                <Sanphamlienquan data_products={product as any[]}/>
+                <Sanphamlienquan data_products={{ products: product as any[] }}/>
             </div>
 
             {/* Comments Section */}
@@ -453,6 +482,7 @@ export const DetailComputer = ({category}:props) =>{
                                                 onClick={() => setUserRating(star)}
                                                 onMouseEnter={() => setHoveredRating(star)}
                                                 onMouseLeave={() => setHoveredRating(0)}
+                                                title={`Chọn ${star} sao`}
                                             >
                                                 <FaStar 
                                                     className={`w-6 h-6 transition-colors ${

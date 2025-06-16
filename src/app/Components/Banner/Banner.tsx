@@ -16,6 +16,6 @@ export const Banner =()=>{
                     <img src="/image/Banner/secondary.png" alt="" className="imgae_secondary absolute  top-[0px] right-[0px] p-0 m-0" />
                 </div>
             </div>
-        </>
+    </>
     )
 }

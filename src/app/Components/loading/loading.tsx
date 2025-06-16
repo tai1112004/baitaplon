@@ -54,5 +54,4 @@ function StyleSheet() {
         </style>
     )
 }
-
 export default LoadingThreeDotsJumping

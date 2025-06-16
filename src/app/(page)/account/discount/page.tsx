@@ -16,7 +16,8 @@ export default function DiscountsPage(){
                                     className="px-4 py-6 flex w-[392px] h-[72px] items-center justify-between bg-neutral-100 rounded-lg">
                                     <form action="#" className="flex justify-between w-full">
                                         <input type="text" className="text-[16px] focus:outline-none" placeholder="label"/>
-                                        <button><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        <button aria-label="Apply discount code">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path
                                                     d="M11.9999 16.3299C9.60992 16.3299 7.66992 14.3899 7.66992 11.9999C7.66992 9.60992 9.60992 7.66992 11.9999 7.66992C14.3899 7.66992 16.3299 9.60992 16.3299 11.9999C16.3299 14.3899 14.3899 16.3299 11.9999 16.3299ZM11.9999 9.16992C10.4399 9.16992 9.16992 10.4399 9.16992 11.9999C9.16992 13.5599 10.4399 14.8299 11.9999 14.8299C13.5599 14.8299 14.8299 13.5599 14.8299 11.9999C14.8299 10.4399 13.5599 9.16992 11.9999 9.16992Z"
