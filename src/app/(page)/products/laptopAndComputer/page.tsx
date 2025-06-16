@@ -1,0 +1,29 @@
+"use client";
+import { Category } from "@/app/Components/Category/Category";
+import { SearchByCriteria } from "@/app/Components/SearchByCriteria/SearchByCriteria";
+import {  useSearchParams, usePathname } from "next/navigation";
+import { useEffect } from "react";
+import { useState } from "react";
+import { CategorySanPham } from "@/app/Components/CategorySanpham/CategorySanPham";
+import {useRouter} from 'next/router'
+export default function laptopAndComputer() {
+    const [product,setproduct] = useState([]) ; 
+        const [page,setpage] = useState(1) ;
+        useEffect(()=>{
+            const data_product = async () =>{
+                 // Lấy 7 trang (2,3,4,5,6,7,8) = 56 sản phẩm
+            const data = await fetch(`https://ecommerce-django-production-7581.up.railway.app/api/products/categories/Laptop`)
+            setproduct(await data.json()) ; 
+                
+                
+            }
+            data_product() ; 
+        },[])
+    return (
+        <>
+            <Category/>
+            <SearchByCriteria data_products={product as any[]}/>
+            
+        </>
+    )
+}
