@@ -9,6 +9,11 @@ export const AccountBar= ()=>{
     const [link,setlink ] = useState(pathname);
     const [loading,setloading] = useState(false) ; 
     const router = useRouter() ; 
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
     useEffect(()=>{
         setlink(pathname);
     },[link])
@@ -17,12 +22,15 @@ export const AccountBar= ()=>{
         {
             setloading(true) ; 
             setTimeout(() => {
+                
                 router.push(link)
+                setloading(false)
             }, 2000);
         }
     }
     const handleLogout = () =>{
         setloading(true) ; 
+        if(!isClient) return ;
         setTimeout(() => {
             document.cookie = "token=; path=/; max-age=0";
             window.location.href = "/" ;  

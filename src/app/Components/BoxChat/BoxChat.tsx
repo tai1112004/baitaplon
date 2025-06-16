@@ -1,16 +1,22 @@
 "use client"
 import { BsChatDots } from "react-icons/bs";
 import { RiSendPlaneFill } from "react-icons/ri";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 type dataChat = {
     name: string | null;
     content: string | null;
 }
-export const BoxChat =()=>{ 
+export const BoxChat =()=>{
+    const [isClient, setIsClient] = useState(false);
+    
+        useEffect(() => {
+            setIsClient(true);
+        }, []);
     
     const [chat, setchat]  = useState<dataChat[]>([]);
     const handleClick = () => {
         console.log('Button clicked');
+        if(!isClient) return ; 
         const chatBox = document.getElementsByClassName('chat')[0];
         chatBox.classList.toggle('hidden'); 
     }

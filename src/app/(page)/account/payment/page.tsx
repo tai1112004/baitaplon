@@ -1,16 +1,27 @@
 "use client"
 
-import { useCallback}  from "react";
+"use client"
+
+import { useCallback, useEffect, useState } from "react";
+
 export default function PaymentPage() {
-    
-    const handleClickCartText =useCallback(()=>{
-        const popupCard = document.getElementById("popupCard") ; 
-        if(popupCard) popupCard.classList.toggle("hidden");
-    },[])
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+    const handleClickCartText = useCallback(() => {
+        if (!isClient) return;
+        const popupCard = document.getElementById("popupCard");
+        if (popupCard) popupCard.classList.toggle("hidden");
+    }, [isClient]);
+
     const handleClickPayPalText = useCallback(() => {
+        if (!isClient) return;
         const popupPayPal = document.getElementById("popupPayPal");
         if (popupPayPal) popupPayPal.classList.toggle("hidden");
-    }, []);
+    }, [isClient]);
     return (
         <>
             <div className="">

@@ -10,6 +10,11 @@ type User =  {
         email?: string;
     }
 export default function PersionalPage() {
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
     const token =getCookie("token");
     const [user , setuser] = useState<User>({});
     const datasuccess ={
@@ -78,6 +83,7 @@ useEffect(()=>{
     update();
 },[user_update])
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) =>{
+        if(!isClient) return ; 
         e.preventDefault(); 
         const username = user.name ;
         const email = user.email ;
@@ -166,6 +172,7 @@ useEffect(()=>{
                                         id="editNameBtn"
                                         className="cursor-pointer"
                                         onClick={()=>{
+                                            if(!isClient) return  ; 
                                             const editname = document.getElementById("popupName")
                                             if(editname)
                                             {
@@ -191,6 +198,7 @@ useEffect(()=>{
                             
                             <div id="popupName"className="fixed inset-0 flex items-center justify-center  bg-opacity-100 backdrop-blur-xs hidden">
                                 <form className="bg-white p-6 rounded-md shadow-md w-[392px] h-[210px]" onSubmit={(e:React.FormEvent<HTMLFormElement>)=>{
+                                        if(!isClient) return  ; 
                                         e.preventDefault() ; 
                                         const form = e.target as HTMLFormElement;
                                         const name = (form.elements.namedItem("name") as HTMLInputElement)?.value;
@@ -215,6 +223,7 @@ useEffect(()=>{
                                     defaultValue={user.name} />
                                     <div className="flex justify-end gap-2 mt-4">
                                         <button id="cancelNameBtn" className="bg-gray-500 text-white px-4 py-2 rounded-md" type="button" onClick={()=>{
+                                            if(!isClient) return  ; 
                                             const editname = document.getElementById("popupName") ;
                                             if(editname)
                                             {
@@ -263,7 +272,8 @@ useEffect(()=>{
                                     >
                                         <svg width="24" height="24"
                                             viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={()=>{
-                                        const editemail = document.getElementById("popupEmail")
+                                        if(!isClient) return  ; 
+                                                const editemail = document.getElementById("popupEmail")
                                         if(editemail)
                                         {
                                             editemail.classList.remove("hidden") ; 
@@ -286,6 +296,7 @@ useEffect(()=>{
                             <div id="popupEmail"
                                 className="fixed inset-0 flex items-center justify-center  bg-opacity-100 backdrop-blur-xs hidden">
                                 <form className="bg-white p-6 rounded-md shadow-md w-[392px] h-[210px]" onSubmit={(e:React.FormEvent<HTMLFormElement>)=>{
+                                        if(!isClient) return  ; 
                                         e.preventDefault() ; 
                                         const form = e.target as HTMLFormElement;
                                         const email = (form.elements.namedItem("email") as HTMLInputElement)?.value;
@@ -311,6 +322,7 @@ useEffect(()=>{
                                     <div className="flex justify-end gap-2 mt-4">
                                         <button id="cancelEmailBtn"
                                             className="bg-gray-500 text-white px-4 py-2 rounded-md"onClick={()=>{
+                                                if(!isClient) return  ; 
                                         const editemail = document.getElementById("popupEmail")
                                         if(editemail)
                                         {
@@ -391,6 +403,7 @@ useEffect(()=>{
                                         aria-label="Chỉnh sửa mật khẩu"
                                     ><svg width="24" height="24"
                                             viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={()=>{
+                                                if(!isClient) return  ; 
                                         const editPassword = document.getElementById("popupPassword")
                                         if(editPassword)
                                         {
@@ -414,6 +427,7 @@ useEffect(()=>{
                             <div id="popupPassword"
                                 className="fixed inset-0 flex items-center justify-center  bg-opacity-100 backdrop-blur-xs hidden">
                                 <form className="bg-white p-6 rounded-md shadow-md w-[392px] h-[210px]" onSubmit={(e:React.FormEvent<HTMLFormElement>)=>{
+                                        if(!isClient) return  ; 
                                         e.preventDefault() ; 
                                         const form = e.target as HTMLFormElement;
                                         const password = (form.elements.namedItem("password") as HTMLInputElement)?.value;
@@ -440,7 +454,8 @@ useEffect(()=>{
                                     <div className="flex justify-end gap-2 mt-4">
                                         <button id="cancelPasswordBtn"
                                             className="bg-gray-500 text-white px-4 py-2 rounded-md" onClick={()=>{
-                                            const editPassword = document.getElementById("popupPassword") ;
+                                            if(!isClient) return  ; 
+                                                const editPassword = document.getElementById("popupPassword") ;
                                             if(editPassword)
                                             {
                                                 editPassword.classList.add("hidden") ;
@@ -499,6 +514,7 @@ useEffect(()=>{
                                     <div className="flex justify-between gap-2  p-[5px] mt-[50px]">
                                         <button id="cancelPasswordBtn"
                                             className="bg-gray-500 text-white px-4 py-2 rounded-md" type="button" onClick={()=>{
+                                                if(!isClient) return  ; 
                                                 const Password = document.getElementById('popupXacnhan');
                                                 if(Password)
                                                 {
@@ -559,6 +575,7 @@ useEffect(()=>{
                             </div>
                         </div>
                                         <button type="button" className="mt-[50px] w-[200px] h-[50px] bg-[blue] text-[white] text-center rounded-[8px]" onClick={()=>{
+                                            if(!isClient) return  ; 
                                             const password = document.getElementById("popupXacnhan") ; 
                                             if(password)
                                             {

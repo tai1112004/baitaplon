@@ -11,6 +11,11 @@ export default function LoginSignupForm() {
   const [success_regis,setsuccess_regis] = useState(false);
   const [wrong_regis,setwrong_regis] = useState(false);
   const router = useRouter() ; 
+  const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -59,6 +64,7 @@ export default function LoginSignupForm() {
         setsuccess(true) ; 
         setwrong(false) ; 
         const data = await response.json();
+        if(!isClient) return ; 
         document.cookie = `token=${data.token}; path=/; max-age=86400`;
         setTimeout(() => {
           

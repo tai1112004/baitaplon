@@ -30,6 +30,11 @@ export const Header = () => {
     const [count_cart,setCount] = useState(0) ; 
     const pathname = usePathname() ; 
     const router = useRouter() ; 
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
     const handleSearchTogle = () => {
        setSearch(!search) ; 
     }
@@ -86,6 +91,7 @@ export const Header = () => {
         console.log(thongtin);
     }
     const handleClick_User = ()=>{
+        if(!isClient) return ; 
          
         if(!token)
         {
@@ -247,6 +253,7 @@ export const Header = () => {
                                                     <div className="information text-[18px] text-[#0C0C0C] font-[300] hover:text-[#0C68F4]">Payment</div>
                                                 </li>
                                                 <li  className="flex gap-[16px]  hover:bg-blue-50  transition-colors cursor-pointer p-[5px]" onClick={()=>{
+                                                    if(!isClient) return ; 
                                                         document.cookie = "token=; path=/; max-age=0";
                                                         settoken(getCookie("token")) ; 
                                                         
@@ -314,6 +321,7 @@ export const Header = () => {
                                                 type="button"
                                                 className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
                                                 onClick={() => {
+                                                    if(!isClient) return ; 
                                                     const input = document.querySelector('input[name="thongtin"]') as HTMLInputElement;
                                                     if (input) input.value = term;
                                                 }}

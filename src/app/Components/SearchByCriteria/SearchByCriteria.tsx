@@ -55,6 +55,11 @@ export const SearchByCriteria = ({data_products}: Props) => {
     {
         title : "Đã thêm vào giỏ hàng thành công" 
     }
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
     // ✅ Cải thiện useEffect với kiểm tra an toàn hơn
     useEffect(() => {
         
@@ -167,22 +172,25 @@ export const SearchByCriteria = ({data_products}: Props) => {
             setData([...data]);
         }
     }
-    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-        const itemName = e.currentTarget.previousElementSibling?.textContent;
-        const itemId = e.currentTarget.name;
-        const checkbox = document.getElementById(itemId) as HTMLInputElement;
-        if (checkbox) {
-            checkbox.checked = false; // Uncheck the checkbox
-        }
-        if (itemName) {
-            const index = data.findIndex(item => item.name === itemName);
-            if (index !== -1) {
-                data.splice(index, 1);
-                setData([...data]);
-            }
+const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if(!isClient) return ; 
+    const itemName = e.currentTarget.previousElementSibling?.textContent;
+    const itemId = e.currentTarget.name;
+    if (typeof document === "undefined") return;
+    const checkbox = document.getElementById(itemId) as HTMLInputElement;
+    if (checkbox) {
+        checkbox.checked = false; // Uncheck the checkbox
+    }
+    if (itemName) {
+        const index = data.findIndex(item => item.name === itemName);
+        if (index !== -1) {
+            data.splice(index, 1);
+            setData([...data]);
         }
     }
+}
     const handleClick_clear = (e: React.MouseEvent<HTMLButtonElement>) => {
+        if(!isClient) return ; 
         e.preventDefault();
         setData([]); // Clear the data array
         const checkboxes = document.querySelectorAll('input[type="checkbox"]');
