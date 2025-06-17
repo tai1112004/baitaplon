@@ -91,8 +91,12 @@ export const Giohang =() =>{
                         "Authorization" : `Bearer ${token}`
                     }
                 })
-                const data = await res.json();
-                setData(data) ; 
+            const data = await res.json();
+            if (Array.isArray(data)) {
+                setData(data);
+            } else {
+                setData([]);
+            }
             }
             cart();
             console.log(data); 
@@ -100,16 +104,16 @@ export const Giohang =() =>{
     },[token])
     const rounter= useRouter() ; 
         const [sum,setsum] = useState(0) ;
-    useEffect(()=>{
-        let tongtien = 0 ; 
-        if(data.length!==0)
-        {
-             tongtien = data.reduce((sum, items) => {
-            return sum + items.price * items.qty;
-            }, 0);
-        }
-        setsum(tongtien);
-    },[data]) ; 
+useEffect(()=>{
+    let tongtien = 0 ; 
+    if(Array.isArray(data) && data.length!==0)
+    {
+         tongtien = data.reduce((sum, items) => {
+        return sum + items.price * items.qty;
+        }, 0);
+    }
+    setsum(tongtien);
+},[data]) ; 
     
     const handleClickReduce = (e: React.MouseEvent<HTMLButtonElement>) => {
         const pointer = parseInt((e.target as HTMLButtonElement).id);
