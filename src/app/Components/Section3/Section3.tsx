@@ -1,8 +1,7 @@
 "use client"
 import { useEffect, useState } from "react";
-import { ChevronRight, ChevronLeft, ShoppingCart, Heart, Eye, Star } from "lucide-react";
+import { ChevronRight, ShoppingCart, Heart, Eye, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { usePathname } from "next/navigation";
 import { LoadingPage } from "../notification/loading";
 
 type data = {
