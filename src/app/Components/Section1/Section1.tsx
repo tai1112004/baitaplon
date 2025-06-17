@@ -1,8 +1,8 @@
 export const Section1=()=>{
     return (
         <>
-            <div className="section1">
-                <div className="inner_wrap  flex">
+            <div className="section1 ">
+                <div className="inner_wrap  flex h-[100vh]">
                     <div className="content w-[40%] ml-[20px]">
                         <h2 className="title   text-[#042352]">
                             <div className="title_main mb-[50px] font-[700] text-[64px]">
