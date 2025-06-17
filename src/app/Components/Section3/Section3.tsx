@@ -300,7 +300,7 @@ export const Section3 = () => {
                                             </button> */}
 
                                             {/* Dots Indicator */}
-                                            <div className="flex gap-2">
+                                            <div className="flex gap-2 overflow-hidden">
                                                 {Array.from({ length: maxSlides + 1 }).map((_, index) => (
                                                     <button
                                                         key={index}

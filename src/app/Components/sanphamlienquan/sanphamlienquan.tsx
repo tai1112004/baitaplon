@@ -45,7 +45,7 @@ export const Sanphamlienquan = ({data_products}:props) => {
         
         const interval = setInterval(() => {
             setCurrent((prev) => (prev === sanpham.length - 3 ? 0 : prev + 1));
-        }, 2000);
+        }, 1000);
 
         return () => clearInterval(interval);
     }, [isAutoPlaying, sanpham.length]);
@@ -262,7 +262,7 @@ export const Sanphamlienquan = ({data_products}:props) => {
                                     setCurrent(index);
                                     setIsAutoPlaying(false);
                                 }}
-                                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                                className={`w-2 h-2 rounded-full transition-all duration-300 overflow-hidden ${
                                     current === index 
                                         ? 'bg-yellow-400 w-8' 
                                         : 'bg-white/40 hover:bg-white/60'
