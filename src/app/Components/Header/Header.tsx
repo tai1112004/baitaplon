@@ -48,21 +48,21 @@ export const Header = () => {
     const pathname = usePathname() ; 
     const router = useRouter() ; 
     const [isClient, setIsClient] = useState(false);
-    const [product,setproduct] = useState<data[]>([]) ; 
-    useEffect(()=>{
-        const fetchData = async () =>{
-            const res = await fetch("https://ecommerce-django-production-6256.up.railway.app/api/products/",{
-                method:"GET",
-                headers:{
-                    "Content-Type":"application/json",
-                }
-            }) ;
-            const json = await res.json() ; 
-            setproduct(Array.isArray(json.products) ? json.products : []);
-        }
-        fetchData() ;
+    // const [product,setproduct] = useState<data[]>([]) ; 
+    // useEffect(()=>{
+    //     const fetchData = async () =>{
+    //         const res = await fetch("https://ecommerce-django-production-6256.up.railway.app/api/products/",{
+    //             method:"GET",
+    //             headers:{
+    //                 "Content-Type":"application/json",
+    //             }
+    //         }) ;
+    //         const json = await res.json() ; 
+    //         setproduct(Array.isArray(json.products) ? json.products : []);
+    //     }
+    //     fetchData() ;
         
-    },[])
+    // },[])
     // useEffect(()=>{
     //     console.log(product)
     // },[])
