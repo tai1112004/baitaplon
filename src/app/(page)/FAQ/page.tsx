@@ -131,7 +131,7 @@ const FAQ = () => {
     }
   ];
 
-  const toggleItem = (id) => {
+  const toggleItem = (id:number) => {
     setOpenItems(prev => ({
       ...prev,
       [id]: !prev[id]
