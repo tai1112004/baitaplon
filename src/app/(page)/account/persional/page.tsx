@@ -60,7 +60,7 @@ useEffect(()=>{
     }
 
     const update = async() =>{
-        const res = await fetch('https://ecommerce-django-production-7581.up.railway.app/api/users/profile/update/', {
+        const res = await fetch('https://ecommerce-django-production-6256.up.railway.app/api/users/profile/update/', {
             method: 'PUT' , 
             headers: {
                 "Content-Type": "application/json",
@@ -107,7 +107,7 @@ useEffect(()=>{
     } 
     useEffect(()=>{
         const data_user = async ()=>{
-            const respose = await fetch("https://ecommerce-django-production-7581.up.railway.app/api/users/profile",{
+            const respose = await fetch("https://ecommerce-django-production-6256.up.railway.app/api/users/profile",{
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -448,7 +448,7 @@ useEffect(()=>{
                                         
                                 }}
 >
-                                    <h2 className="text-lg font-semibold">Edit username</h2>
+                                    <h2 className="text-lg font-semibold">Edit Password</h2>
                                     <input id="PasswordInput" type="text" className="border p-2 w-full mt-2 rounded-md"
                                         placeholder="nhập mật khẩu mới......" name ="password" defaultValue="************" />
                                     <div className="flex justify-end gap-2 mt-4">
@@ -482,7 +482,7 @@ useEffect(()=>{
                                                 fill="#444444" />
                                         </svg>
                                         <p id="AddressText" className="flex gap-2 text-[16px] font-light">
-                                            <span id="AddressText">HubSpot, 25 First Street, Cambridge</span>
+                                            <span id="AddressText">149 Chiến Thắng - Tân Triều - Thanh Trì - Thành Phố Hà Nội </span>
                                         </p>
                                     </div>
 
@@ -549,7 +549,7 @@ useEffect(()=>{
                                                 fill="#444444" />
                                         </svg>
                                         <p id="PostalcodeText" className="flex gap-2 text-[16px] font-light">
-                                            <span id="PostalcodeText">HubSpot, 25 First Street, Cambridge</span>
+                                            <span id="PostalcodeText">Học Viện Kĩ Thuật Mật Mã (KMA)</span>
                                         </p>
                                     </div>
 

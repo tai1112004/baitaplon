@@ -51,7 +51,7 @@ export default function LoginSignupForm() {
     const login = async () =>
     {
 
-      const response = await fetch('https://ecommerce-django-production-7581.up.railway.app/api/users/login/', {
+      const response = await fetch('https://ecommerce-django-production-6256.up.railway.app/api/users/login/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ export default function LoginSignupForm() {
           
           if(data.isAdmin)
         {
-           window.location.href = "https://ecommerce-django-production-7581.up.railway.app/admin";
+           window.location.href = "https://ecommerce-django-production-6256.up.railway.app/admin";
         }
         else 
         {
@@ -98,7 +98,7 @@ export default function LoginSignupForm() {
       } 
     const register = async () =>
     {
-      const response = await fetch('https://ecommerce-django-production-7581.up.railway.app/api/users/register/', {
+      const response = await fetch('https://ecommerce-django-production-6256.up.railway.app/api/users/register/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

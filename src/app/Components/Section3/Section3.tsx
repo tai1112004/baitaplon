@@ -34,7 +34,7 @@ export const Section3 = () => {
         const getdata = async () => {
                 
                 
-                const res = await fetch("https://ecommerce-django-production-7581.up.railway.app/api/products/discount");
+                const res = await fetch("https://ecommerce-django-production-6256.up.railway.app/api/products/discount");
                 const json = await res.json();
                 setSanpham(Array.isArray(json.products) ? json.products : []);
                 // Kiểm tra dữ liệu trả về

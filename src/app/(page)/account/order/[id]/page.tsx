@@ -48,7 +48,7 @@ export default function StatusPage() {
         if(token)
         {
             const fetchData = async () =>{
-                const res = await fetch(`https://ecommerce-django-production-7581.up.railway.app/api/orders/${id}/`,{
+                const res = await fetch(`https://ecommerce-django-production-6256.up.railway.app/api/orders/${id}/`,{
                     method:"GET",
                     headers: {
                         "Content-Type": "application/json",

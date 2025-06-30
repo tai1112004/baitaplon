@@ -24,7 +24,7 @@ export default function TabletPage() {
     useEffect(()=>{
         const data_product = async () =>{
                 // Lấy 7 trang (2,3,4,5,6,7,8) = 56 sản phẩm
-        const data = await fetch(`https://ecommerce-django-production-7581.up.railway.app/api/products/categories/Tablet`)
+        const data = await fetch(`https://ecommerce-django-production-6256.up.railway.app/api/products/categories/Tablet`)
         const json = await data.json();
         setproduct(Array.isArray(json.products) ? json.products : []);
             

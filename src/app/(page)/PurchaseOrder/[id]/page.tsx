@@ -26,7 +26,7 @@ export default function PurchaseOrderID() {
         {
             const fetchData = async () =>
             {
-                const res = await fetch(`https://ecommerce-django-production-7581.up.railway.app/api/products/${id}`,{
+                const res = await fetch(`https://ecommerce-django-production-6256.up.railway.app/api/products/${id}`,{
                     method : "GET" , 
                     headers :{
                         "Content-Type": "application/json",
@@ -57,7 +57,7 @@ export default function PurchaseOrderID() {
         if(token)
         {
              const BuyProduct = async () =>{
-                const res = await fetch(`https://ecommerce-django-production-7581.up.railway.app/api/orders/buynow/${id}/`,{
+                const res = await fetch(`https://ecommerce-django-production-6256.up.railway.app/api/orders/buynow/${id}/`,{
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -74,7 +74,8 @@ export default function PurchaseOrderID() {
                         postalCode: "lololo" ,
                         country: "vn" ,
                     } , 
-                    receiver: user 
+                    receiver: user ,
+                    qty : 1 
         })
                 }
                 )

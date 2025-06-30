@@ -105,7 +105,7 @@ export const DetailComputer = ({category}:props) =>{
     useEffect(()=>{
         const data_product = async () =>{
             // Lấy 7 trang (2,3,4,5,6,7,8) = 56 sản phẩm
-            const data = await fetch(`https://ecommerce-django-production-7581.up.railway.app/api/products/categories/${category}`)
+            const data = await fetch(`https://ecommerce-django-production-6256.up.railway.app/api/products/categories/${category}`)
             const json = await data.json();
             setproduct(Array.isArray(json.products) ? json.products : []);
         }
@@ -115,7 +115,7 @@ export const DetailComputer = ({category}:props) =>{
     useEffect(()=>{
         const fetchData = async () =>
         {
-            const res = await fetch(`https://ecommerce-django-production-7581.up.railway.app/api/products/${id}`,{
+            const res = await fetch(`https://ecommerce-django-production-6256.up.railway.app/api/products/${id}`,{
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -209,7 +209,7 @@ export const DetailComputer = ({category}:props) =>{
         else 
         {
             const add_cart = async() =>{
-                await fetch(`https://ecommerce-django-production-7581.up.railway.app/api/orders/addtocart/${id}/`,{
+                await fetch(`https://ecommerce-django-production-6256.up.railway.app/api/orders/addtocart/${id}/`,{
                     method: 'POST',
                     headers: {
                         "Content-Type": "application/json",

@@ -34,7 +34,7 @@ export default function OrdersPage (){
     useEffect(()=>{ 
         const fetchdata = async () =>
         {
-            const res = await fetch("https://ecommerce-django-production-7581.up.railway.app/api/orders/myorders",{
+            const res = await fetch("https://ecommerce-django-production-6256.up.railway.app/api/orders/myorders",{
                 method: "GET",
                 headers:{
                     "Content-Type": "application/json",

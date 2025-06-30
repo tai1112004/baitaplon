@@ -78,11 +78,11 @@ export const SearchByCriteria = ({data_products}: Props) => {
         {
             url = `/products/mobilePhones/${id}` ;
         }
-        else if(category===4)
+        else if(category===1)
         {
             url = `/products/laptopAndComputer/${id}` ;
         }
-        else if(category===5)
+        else if(category===4)
         {
             url = `/products/tablets/${id}` ;
         }
@@ -94,15 +94,15 @@ export const SearchByCriteria = ({data_products}: Props) => {
         {
             url = `/products/cameras/${id}` ;
         }
-        else if(category===9)
+        else if(category===5)
         {
             url = `/products/wearables/${id}` ;
         }
-        else if(category===10)
+        else if(category===2)
         {
             url = `/products/gaming/${id}` ;
         }
-        else if(category===11)
+        else if(category===8)
         {
             url = `/products/networking/${id}` ;
         }
@@ -205,7 +205,7 @@ const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         if(token)
         { 
             const add_cart = async() =>{
-                 await fetch(`https://ecommerce-django-production-7581.up.railway.app/api/orders/addtocart/${id}/`,{
+                 await fetch(`https://ecommerce-django-production-6256.up.railway.app/api/orders/addtocart/${id}/`,{
                         method: 'POST',
                         headers: {
                         "Content-Type": "application/json",

@@ -23,7 +23,7 @@ export default  function ProductPage() {
     const [product, setproduct] = useState<data[]>([]); 
     useEffect(() => {
   const data_product = async () => {
-    const data = await fetch(`https://ecommerce-django-production-7581.up.railway.app/api/products`);
+    const data = await fetch(`https://ecommerce-django-production-6256.up.railway.app/api/products`);
     const json = await data.json();
     setproduct(Array.isArray(json.products) ? json.products : []);// <-- lấy mảng sản phẩm
   };

@@ -84,7 +84,7 @@ export const Giohang =() =>{
         if(token)
         {
             const cart = async () =>{
-                const res = await fetch("https://ecommerce-django-production-7581.up.railway.app/api/orders/cart/",{
+                const res = await fetch("https://ecommerce-django-production-6256.up.railway.app/api/orders/cart/",{
                     method:"GET",
                     headers:{
                         "Content-Type" : "application/json",
@@ -143,7 +143,7 @@ useEffect(()=>{
     }
     const handleClickDelete=(pointer:number)=>{
         const del = async() =>{
-             await fetch(`https://ecommerce-django-production-7581.up.railway.app/api/orders/removefromcart/${pointer}/`,{
+             await fetch(`https://ecommerce-django-production-6256.up.railway.app/api/orders/removefromcart/${pointer}/`,{
                 method:'DELETE',
                 headers:{
                     'Content-Type':'application/json',

@@ -20,7 +20,7 @@ export default function PurchaseOrder() {
             {
                 const fetchData = async () =>
                 {
-                    const res = await fetch(`https://ecommerce-django-production-7581.up.railway.app/api/orders/cart/`,{
+                    const res = await fetch(`https://ecommerce-django-production-6256.up.railway.app/api/orders/cart/`,{
                         method : "GET" , 
                         headers :{
                             "Content-Type": "application/json",
@@ -52,7 +52,7 @@ export default function PurchaseOrder() {
         {
             
             const BuyProduct = async () =>{
-                const res = await fetch("https://ecommerce-django-production-7581.up.railway.app/api/orders/makeorder/",{
+                const res = await fetch("https://ecommerce-django-production-6256.up.railway.app/api/orders/makeorder/",{
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

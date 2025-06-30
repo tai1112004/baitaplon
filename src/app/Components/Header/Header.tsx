@@ -21,6 +21,23 @@ type UserProfile = {
     username?: string;
     // add other properties if needed
 };
+type data  = {
+    _id: number ; 
+    name:string ; 
+    image:string ; 
+    description:string ; 
+    rating:number ; 
+    price:number ; 
+    countInStock:number ; 
+    discount:number; 
+    ram?:string ; 
+    screen_size?:string ; 
+    processor?:string ; 
+    gpu_brand?:string ; 
+    drive_size?:string ; 
+    brand:number ; 
+    category:number ; 
+}
 
 export const Header = () => {
     const [search, setSearch] = useState(false);
@@ -31,7 +48,24 @@ export const Header = () => {
     const pathname = usePathname() ; 
     const router = useRouter() ; 
     const [isClient, setIsClient] = useState(false);
-
+    const [product,setproduct] = useState<data[]>([]) ; 
+    useEffect(()=>{
+        const fetchData = async () =>{
+            const res = await fetch("https://ecommerce-django-production-6256.up.railway.app/api/products/",{
+                method:"GET",
+                headers:{
+                    "Content-Type":"application/json",
+                }
+            }) ;
+            const json = await res.json() ; 
+            setproduct(Array.isArray(json.products) ? json.products : []);
+        }
+        fetchData() ;
+        
+    },[])
+    // useEffect(()=>{
+    //     console.log(product)
+    // },[])
     useEffect(() => {
         setIsClient(true);
     }, []);
@@ -45,7 +79,7 @@ export const Header = () => {
             setlogin(true) ;
             const information = async () =>
             {
-                const respose = await fetch("https://ecommerce-django-production-7581.up.railway.app/api/users/profile", {
+                const respose = await fetch("https://ecommerce-django-production-6256.up.railway.app/api/users/profile", {
                     method: "POST" , 
                     headers: {
                         "Content-Type": "application/json",
@@ -65,7 +99,7 @@ export const Header = () => {
         {
             const handleCartUpdate =() =>{
                 const cart = async() =>{
-                const res = await fetch("https://ecommerce-django-production-7581.up.railway.app/api/orders/cart/",{
+                const res = await fetch("https://ecommerce-django-production-6256.up.railway.app/api/orders/cart/",{
                     method: "GET",
                     headers: {
                         "Content-Type" : "application/json",
@@ -294,7 +328,7 @@ export const Header = () => {
                                     </button>
                                 </div>
                                 
-                                <form onSubmit={handleSubmit} className="space-y-4">
+                                <form onChange={handleSubmit} className="space-y-4">
                                     <div className="relative">
                                         <input 
                                             type="text" 
