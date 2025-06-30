@@ -1,5 +1,5 @@
 "use client"
-import { SearchByCriteria } from '@/app/Components/SearchByCriteria/SearchByCriteria';
+import { Products } from '@/app/Components/Products/Products';
 import {useState} from 'react';
 import { useEffect } from 'react';
 type data  = {
@@ -33,7 +33,7 @@ export default  function ProductPage() {
     
     return (
         <>
-             <SearchByCriteria data_products={{ products: product as data[] }} />
+             <Products data_products={{ products: product as data[] }} />
         </>
     )
 } 

@@ -65,58 +65,6 @@ export const SearchByCriteria = ({data_products}: Props) => {
         title : "Đã thêm vào giỏ hàng thành công" 
     }
     const [data, setData] = useState<ItemsSearch[]>([]);
-    const [filters, setFilters] = useState({
-        brand: [] as string[],
-        color: [] as string[],
-        ram: [] as string[],
-        processor: [] as string[],
-        gpuBrand: [] as string[],
-        driveSize: [] as string[]
-    });
-    // const [isClient, setIsClient] = useState(false);
-    useEffect(() => {
-         let url = "https://ecommerce-django-production-6256.up.railway.app/api/products/?";
-        if (filters.ram.length > 0) {
-            const ramValues = filters.ram.map(ram => ram.replace(' GB', ''));
-            url += `ram=${ramValues.join('&ram= ')}&`;
-        }
-        if (filters.processor.length > 0) {
-            url += `processor=${filters.processor.join('&processor=')}&`;
-        }
-        if (filters.gpuBrand.length > 0) {
-            url += `gpu_brand=${filters.gpuBrand.join('&gpu_brand=')}&`;
-        }
-        if (filters.driveSize.length > 0) {
-            const dirverSizeValues = filters.ram.map(ram => ram.replace(' GB', ''));
-            
-            url += `drive_size=${dirverSizeValues.join('&drive_size=')}&`;
-        }
-        const fetchData = async () => {
-            const res = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-            if(res.status===500)
-            {
-                setLoading(true);
-
-            }
-            else if(res.status===200)
-            {
-                const data = await res.json();
-                setsanpham(data.products);
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, [filters]);
-
-    // useEffect(() => {
-    //     setIsClient(true);
-    // }, [isClient]);
-    // ✅ Cải thiện useEffect với kiểm tra an toàn hơn
     useEffect(() => {
         
         // Kiểm tra kỹ hơn
@@ -213,108 +161,6 @@ export const SearchByCriteria = ({data_products}: Props) => {
     };
     
 
-    // Map category names to filter keys
-    const getCategoryFromName = (name: string): keyof typeof filters | null => {
-        const brandOptions = ['Asus', 'Acer', 'Apple', 'Dell'];
-        const colorOptions = ['black', 'white', 'pink', 'silver'];
-        const ramOptions = ['32 GB', '16 GB', '12 GB', '8 GB'];
-        const processorOptions = ['Intel Core i5', 'Intel Core i7', 'Intel Core i9', 'AMD Ryzen 9'];
-        const gpuOptions = ['NVIDA', 'Intel', 'AMD', 'Apple'];
-        const driveOptions = ['512 GB', '256 GB', '64 GB', '128 GB'];
-
-        if (brandOptions.includes(name)) return 'brand';
-        if (colorOptions.includes(name)) return 'color';
-        if (ramOptions.includes(name)) return 'ram';
-        if (processorOptions.includes(name)) return 'processor';
-        if (gpuOptions.includes(name)) return 'gpuBrand';
-        if (driveOptions.includes(name)) return 'driveSize';
-        return null;
-    };
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, id, checked } = e.target;
-        console.log("e.target.name", name);
-        console.log("e.target.checked", checked);
-
-        const category = getCategoryFromName(name);
-        
-        if (checked) {
-            // Add to data array
-            const newItem: ItemsSearch = { name, id };
-            setData(prev => [...prev, newItem]);
-            
-            // Add to filters
-            if (category) {
-                setFilters(prev => ({
-                    ...prev,
-                    [category]: [...prev[category], name]
-                }));
-            }
-        } else {
-            // Remove from data array
-            setData(prev => prev.filter(item => item.name !== name));
-            
-            // Remove from filters
-            if (category) {
-                setFilters(prev => ({
-                    ...prev,
-                    [category]: prev[category].filter(item => item !== name)
-                }));
-            }
-        }
-           
-            
-    };
-
-    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        const itemName = e.currentTarget.previousElementSibling?.textContent;
-        const itemId = e.currentTarget.name;
-        
-        // Uncheck the checkbox
-        const checkbox = document.getElementById(itemId) as HTMLInputElement;
-        if (checkbox) {
-            checkbox.checked = false;
-        }
-        
-        if (itemName) {
-            // Remove from data array
-            setData(prev => prev.filter(item => item.name !== itemName));
-            
-            // Remove from filters
-            const category = getCategoryFromName(itemName);
-            if (category) {
-                setFilters(prev => ({
-                    ...prev,
-                    [category]: prev[category].filter(item => item !== itemName)
-                }));
-            }
-        }
-    };
-
-    const handleClick_clear = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        
-        // Clear data array
-        setData([]);
-        
-        // Clear filters
-        setFilters({
-            brand: [],
-            color: [],
-            ram: [],
-            processor: [],
-            gpuBrand: [],
-            driveSize: []
-        });
-        
-        // Uncheck all checkboxes
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        checkboxes.forEach((checkbox) => {
-            (checkbox as HTMLInputElement).checked = false;
-        });
-    };
-
     // Debug: Log current state
     const handleClickAddCart=(id:number)=>{
         const token = getCookie("token") ; 
@@ -362,200 +208,15 @@ export const SearchByCriteria = ({data_products}: Props) => {
         }
         <div className="flex gap-[8px] flex-wrap">
                 <div className="w-full">
-            {/* Selected filters display */}
-            <div className="flex gap-2 flex-wrap mb-4">
-                {data.length > 0 &&
-                    data.map((item: ItemsSearch, index: number) => (
-                        <div 
-                            className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 rounded-lg px-3 py-2 justify-between min-w-[133px] h-10 transition-colors duration-200" 
-                            key={index}
-                        >
-                            <div className="text-sm font-semibold text-gray-900 truncate">
-                                {item.name}
-                            </div>
-                            <button 
-                                onClick={handleClick} 
-                                name={item.id ?? ''} 
-                                aria-label="Xóa bộ lọc"
-                                className="text-gray-500 hover:text-red-500 font-bold text-lg leading-none transition-colors duration-200 flex-shrink-0"
-                            >
-                                ×
-                            </button>
-                        </div>
-                    ))
-                }
-            </div>
-                <div  className="flex mb-[4px]">
-                    <div className="flex gap-8 mt-5 relative w-20%">
-                        <form className="mt-10 w-72 flex flex-col gap-5 bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-                            <div className="flex items-center justify-between">
-                                <div className="text-xl font-medium text-black">Filters</div>
-                                <button 
-                                    className="text-base font-normal text-blue-600 hover:text-red-500 transition-colors duration-200" 
-                                    onClick={handleClick_clear}
-                                    type="button"
-                                >
-                                    Clear all
-                                </button>
-                            </div>
-
-                            {/* Brand */}
-                            <div className="border-t border-gray-300 pt-3">
-                                <div className="pb-3 text-lg font-light text-gray-900">Brand</div>
-                                <div className="space-y-2">
-                                    {['Asus', 'Acer', 'Apple', 'Dell'].map((brand) => (
-                                        <div className="flex items-center" key={brand}>
-                                            <input 
-                                                type="checkbox" 
-                                                id={`${brand}-checkbox`} 
-                                                name={brand} 
-                                                onChange={handleChange}
-                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                                            />
-                                            <label 
-                                                htmlFor={`${brand}-checkbox`}
-                                                className="ml-2 text-sm font-medium text-gray-700 cursor-pointer hover:text-gray-900"
-                                            >
-                                                {brand}
-                                            </label>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Color */}
-                            <div className="border-t border-gray-300 pt-3">
-                                <div className="pb-3 text-lg font-light text-gray-900">Color</div>
-                                <div className="space-y-2">
-                                    {['black', 'white', 'pink', 'silver'].map((color) => (
-                                        <div className="flex items-center" key={color}>
-                                            <input 
-                                                type="checkbox" 
-                                                id={`${color}-checkbox`} 
-                                                name={color} 
-                                                onChange={handleChange}
-                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                                            />
-                                            <label 
-                                                htmlFor={`${color}-checkbox`}
-                                                className="ml-2 text-sm font-medium text-gray-700 cursor-pointer hover:text-gray-900 capitalize"
-                                            >
-                                                {color}
-                                            </label>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* RAM */}
-                            <div className="border-t border-gray-300 pt-3">
-                                <div className="pb-3 text-lg font-light text-gray-900">RAM</div>
-                                <div className="space-y-2">
-                                    {['32 GB', '16 GB', '12 GB', '8 GB'].map((ram) => (
-                                        <div className="flex items-center" key={ram}>
-                                            <input 
-                                                type="checkbox" 
-                                                id={`${ram.replace(' ', '')}-checkbox`} 
-                                                name={ram} 
-                                                onChange={handleChange}
-                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                                            />
-                                            <label 
-                                                htmlFor={`${ram.replace(' ', '')}-checkbox`}
-                                                className="ml-2 text-sm font-medium text-gray-700 cursor-pointer hover:text-gray-900"
-                                            >
-                                                {ram}
-                                            </label>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Processor */}
-                            <div className="border-t border-gray-300 pt-3">
-                                <div className="pb-3 text-lg font-light text-gray-900">Processor</div>
-                                <div className="space-y-2">
-                                    {['Intel Core i5', 'Intel Core i7', 'Intel Core i9', 'AMD Ryzen 9'].map((processor) => (
-                                        <div className="flex items-center" key={processor}>
-                                            <input 
-                                                type="checkbox" 
-                                                id={`${processor.replace(/\s+/g, '')}-checkbox`} 
-                                                name={processor} 
-                                                onChange={handleChange}
-                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                                            />
-                                            <label 
-                                                htmlFor={`${processor.replace(/\s+/g, '')}-checkbox`}
-                                                className="ml-2 text-sm font-medium text-gray-700 cursor-pointer hover:text-gray-900"
-                                            >
-                                                {processor}
-                                            </label>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* GPU Brand */}
-                            <div className="border-t border-gray-300 pt-3">
-                                <div className="pb-3 text-lg font-light text-gray-900">GPU Brand</div>
-                                <div className="space-y-2">
-                                    {['NVIDA', 'Intel', 'AMD', 'Apple'].map((gpu) => (
-                                        <div className="flex items-center" key={gpu}>
-                                            <input 
-                                                type="checkbox" 
-                                                id={`${gpu}-checkbox`} 
-                                                name={gpu} 
-                                                onChange={handleChange}
-                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                                            />
-                                            <label 
-                                                htmlFor={`${gpu}-checkbox`}
-                                                className="ml-2 text-sm font-medium text-gray-700 cursor-pointer hover:text-gray-900"
-                                            >
-                                                {gpu}
-                                            </label>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Drive Size */}
-                            <div className="border-t border-gray-300 pt-3">
-                                <div className="pb-3 text-lg font-light text-gray-900">Drive Size</div>
-                                <div className="space-y-2">
-                                    {['512 GB', '256 GB', '128 GB', '64 GB'].map((drive) => (
-                                        <div className="flex items-center" key={drive}>
-                                            <input 
-                                                type="checkbox" 
-                                                id={`${drive.replace(' ', '')}-checkbox`} 
-                                                name={drive} 
-                                                onChange={handleChange}
-                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                                            />
-                                            <label 
-                                                htmlFor={`${drive.replace(' ', '')}-checkbox`}
-                                                className="ml-2 text-sm font-medium text-gray-700 cursor-pointer hover:text-gray-900"
-                                            >
-                                                {drive.replace(' GB', 'GB')}
-                                            </label>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </form>
-
-                    </div>
-
-                    <div className="w-[80%]">
                     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-6">
-            {loading && (
-                <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-                    <div className="bg-white p-8 rounded-2xl shadow-2xl">
-                        <LoadingThreeDotsJumping />
-                        <p className="mt-4 text-gray-600 text-center">Đang tải...</p>
-                    </div>
-                </div>
-            )}
+                    {loading && (
+                        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                            <div className="bg-white p-8 rounded-2xl shadow-2xl">
+                                <LoadingThreeDotsJumping />
+                                <p className="mt-4 text-gray-600 text-center">Đang tải...</p>
+                            </div>
+                        </div>
+                    )}
 
             <div className="max-w-7xl mx-auto">
                 {/* Header Section */}
@@ -699,11 +360,9 @@ export const SearchByCriteria = ({data_products}: Props) => {
                     
                 </div>
             
-        </div>
                 
                 <BoxChat/>
                 
-            </div>
             
               
             
