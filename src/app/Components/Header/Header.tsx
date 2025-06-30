@@ -21,23 +21,23 @@ type UserProfile = {
     username?: string;
     // add other properties if needed
 };
-type data  = {
-    _id: number ; 
-    name:string ; 
-    image:string ; 
-    description:string ; 
-    rating:number ; 
-    price:number ; 
-    countInStock:number ; 
-    discount:number; 
-    ram?:string ; 
-    screen_size?:string ; 
-    processor?:string ; 
-    gpu_brand?:string ; 
-    drive_size?:string ; 
-    brand:number ; 
-    category:number ; 
-}
+// type data  = {
+//     _id: number ; 
+//     name:string ; 
+//     image:string ; 
+//     description:string ; 
+//     rating:number ; 
+//     price:number ; 
+//     countInStock:number ; 
+//     discount:number; 
+//     ram?:string ; 
+//     screen_size?:string ; 
+//     processor?:string ; 
+//     gpu_brand?:string ; 
+//     drive_size?:string ; 
+//     brand:number ; 
+//     category:number ; 
+// }
 
 export const Header = () => {
     const [search, setSearch] = useState(false);
