@@ -21,26 +21,26 @@ export default function ContactUs() {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     setIsSubmitting(true);
     
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubmitted(true);
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        subject: '',
-        category: '',
-        message: ''
-      });
+//     // Simulate form submission
+//     setTimeout(() => {
+//       setIsSubmitting(false);
+//       setSubmitted(true);
+//       setFormData({
+//         name: '',
+//         email: '',
+//         phone: '',
+//         subject: '',
+//         category: '',
+//         message: ''
+//       });
       
-      setTimeout(() => setSubmitted(false), 5000);
-    }, 1000);
-  };
+//       setTimeout(() => setSubmitted(false), 5000);
+//     }, 1000);
+//   };
 
   const categories = [
     'Mobile & Smartphone',

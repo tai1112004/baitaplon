@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, Search, Smartphone, Headphones, Laptop, Gamepad2, Wifi, Package, Truck, CreditCard, Shield, RotateCcw, HelpCircle } from 'lucide-react';
+import { ChevronDown, ChevronUp, Search, Smartphone, Headphones, Laptop, Gamepad2, Wifi, Truck, CreditCard, Shield, RotateCcw, HelpCircle } from 'lucide-react';
 
 const FAQ = () => {
   const [searchTerm, setSearchTerm] = useState('');
