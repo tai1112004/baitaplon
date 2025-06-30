@@ -64,7 +64,6 @@ export const SearchByCriteria = ({data_products}: Props) => {
     {
         title : "Đã thêm vào giỏ hàng thành công" 
     }
-    const [data, setData] = useState<ItemsSearch[]>([]);
     useEffect(() => {
         
         // Kiểm tra kỹ hơn
