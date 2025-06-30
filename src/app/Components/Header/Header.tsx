@@ -21,23 +21,23 @@ type UserProfile = {
     username?: string;
     // add other properties if needed
 };
-// type data  = {
-//     _id: number ; 
-//     name:string ; 
-//     image:string ; 
-//     description:string ; 
-//     rating:number ; 
-//     price:number ; 
-//     countInStock:number ; 
-//     discount:number; 
-//     ram?:string ; 
-//     screen_size?:string ; 
-//     processor?:string ; 
-//     gpu_brand?:string ; 
-//     drive_size?:string ; 
-//     brand:number ; 
-//     category:number ; 
-// }
+type data  = {
+    _id: number ; 
+    name:string ; 
+    image:string ; 
+    description:string ; 
+    rating:number ; 
+    price:number ; 
+    countInStock:number ; 
+    discount:number; 
+    ram?:string ; 
+    screen_size?:string ; 
+    processor?:string ; 
+    gpu_brand?:string ; 
+    drive_size?:string ; 
+    brand:number ; 
+    category:number ; 
+}
 
 export const Header = () => {
     const [search, setSearch] = useState(false);
@@ -48,24 +48,24 @@ export const Header = () => {
     const pathname = usePathname() ; 
     const router = useRouter() ; 
     const [isClient, setIsClient] = useState(false);
-    // const [product,setproduct] = useState<data[]>([]) ; 
-    // useEffect(()=>{
-    //     const fetchData = async () =>{
-    //         const res = await fetch("https://ecommerce-django-production-6256.up.railway.app/api/products/",{
-    //             method:"GET",
-    //             headers:{
-    //                 "Content-Type":"application/json",
-    //             }
-    //         }) ;
-    //         const json = await res.json() ; 
-    //         setproduct(Array.isArray(json.products) ? json.products : []);
-    //     }
-    //     fetchData() ;
+    const [display, setDisplay] = useState(false);
+    const [product,setproduct] = useState<data[]>([]) ; 
+    const [change, setChange]  = useState(false) ;
+    const [newProduct,setNewProduct] = useState<data[]>([]) ; // State to hold filtered products
+    useEffect(()=>{
+        const fetchData = async () =>{
+            const res = await fetch("https://ecommerce-django-production-6256.up.railway.app/api/products/",{
+                method:"GET",
+                headers:{
+                    "Content-Type":"application/json",
+                }
+            }) ;
+            const json = await res.json() ; 
+            setproduct(Array.isArray(json.products) ? json.products : []);
+        }
+        fetchData() ;
         
-    // },[])
-    // useEffect(()=>{
-    //     console.log(product)
-    // },[])
+    },[]) ; // Fetch products when search state changes or on initial load
     useEffect(() => {
         setIsClient(true);
     }, []);
@@ -118,11 +118,29 @@ export const Header = () => {
     },[token,count_cart])
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("đã chạy vào đây");
-        // TypeScript-safe way to access form values
-        const form = e.target as HTMLFormElement;
+        setChange(!change) ;
+        const form = e.currentTarget as HTMLFormElement;
+        // const thongtin = form.elements.namedItem("thongtin") as HTMLInputElement;
         const thongtin = (form.elements.namedItem("thongtin") as HTMLInputElement)?.value;
-        console.log(thongtin);
+        if (!thongtin || thongtin.trim() === "" || thongtin ==" ")
+        {
+            setDisplay(false) ; 
+        }
+        else {
+            setDisplay(true) ;
+             const product1=product.filter((item) => {
+            return item.name.toLowerCase().includes(thongtin.toLowerCase()) ;
+    });
+            if(product1.length > 0)
+            {
+                setNewProduct(product1) ; 
+            }
+            else 
+            {
+                setNewProduct([]) ; 
+            }
+        }
+        
     }
     const handleClick_User = ()=>{
         if(!isClient) return ; 
@@ -144,6 +162,52 @@ export const Header = () => {
             }
         }
      }
+     const handleClickTranferPageDetail = useCallback((id:number , category:number) => {
+        let url:string  ;
+        
+        if(category===3) 
+        {
+            url = `/products/mobilePhones/${id}` ;
+        }
+        else if(category===1)
+        {
+            url = `/products/laptopAndComputer/${id}` ;
+        }
+        else if(category===4)
+        {
+            url = `/products/tablets/${id}` ;
+        }
+        else if(category===6)
+        {
+            url = `/products/audio/${id}` ;
+        }
+        else if(category ===7)
+        {
+            url = `/products/cameras/${id}` ;
+        }
+        else if(category===5)
+        {
+            url = `/products/wearables/${id}` ;
+        }
+        else if(category===2)
+        {
+            url = `/products/gaming/${id}` ;
+        }
+        else if(category===8)
+        {
+            url = `/products/networking/${id}` ;
+        }
+        
+        setTimeout(() => {
+            if(pathname !== url)
+            {
+                setloading(true);
+                router.push(url) ;
+            }
+             
+        }, 1000);
+    }, [router,setloading]);
+
     const handleClick_tranferPage=useCallback((link:string)=>{
         if(link==="/cart" && !token)
         {
@@ -345,9 +409,31 @@ export const Header = () => {
                                             <CiSearch className="w-5 h-5" />
                                         </button>
                                     </div>
-                                    
-                                    {/* Quick search suggestions */}
-                                    <div className="flex flex-wrap gap-2 pt-4">
+                                {
+                                    display ? (
+                                        <div className="mt-4">
+                                            {newProduct.length > 0 ? (
+                                                <ul className="space-y-4">
+                                                    {newProduct.map((item) => (
+                                                        <li key={item._id} className="flex items-center gap-4 p-4 border-b border-gray-200 hover:bg-gray-50 transition-colors" onClick={() => {
+                                                            handleSearchTogle();
+                                                            handleClickTranferPageDetail(item._id, item.category);
+                                                        }}>
+                                                            <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-md" />
+                                                            <div className="flex justify-between w-100% w-[800px]">
+                                                                <h4 className="text-lg font-semibold text-gray-800">{item.name}</h4>
+                                                                <span className="text-blue-600 font-bold">${item.price}</span>
+                                                            </div>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            ) : (
+                                                <p className="text-gray-500">Không tìm thấy sản phẩm nào.</p>
+                                            )}
+                                        </div>
+                                        
+                                    ) : (
+                                        <div className="flex flex-wrap gap-2 pt-4">
                                         <span className="text-sm text-gray-500">Tìm kiếm phổ biến:</span>
                                         {['iPhone', 'MacBook', 'AirPods', 'iPad'].map((term) => (
                                             <button
@@ -364,6 +450,11 @@ export const Header = () => {
                                             </button>
                                         ))}
                                     </div>
+                                    )
+                                
+                                    
+                                }
+                                    
                                 </form>
                             </div>
                         </div>
