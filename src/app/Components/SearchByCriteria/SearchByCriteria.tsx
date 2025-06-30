@@ -73,11 +73,11 @@ export const SearchByCriteria = ({data_products}: Props) => {
         gpuBrand: [] as string[],
         driveSize: [] as string[]
     });
-    const [isClient, setIsClient] = useState(false);
+    // const [isClient, setIsClient] = useState(false);
     useEffect(() => {
          let url = "https://ecommerce-django-production-6256.up.railway.app/api/products/?";
         if (filters.ram.length > 0) {
-            let ramValues = filters.ram.map(ram => ram.replace(' GB', ''));
+            const ramValues = filters.ram.map(ram => ram.replace(' GB', ''));
             url += `ram=${ramValues.join('&ram= ')}&`;
         }
         if (filters.processor.length > 0) {
@@ -87,7 +87,7 @@ export const SearchByCriteria = ({data_products}: Props) => {
             url += `gpu_brand=${filters.gpuBrand.join('&gpu_brand=')}&`;
         }
         if (filters.driveSize.length > 0) {
-            let dirverSizeValues = filters.ram.map(ram => ram.replace(' GB', ''));
+            const dirverSizeValues = filters.ram.map(ram => ram.replace(' GB', ''));
             
             url += `drive_size=${dirverSizeValues.join('&drive_size=')}&`;
         }
@@ -113,9 +113,9 @@ export const SearchByCriteria = ({data_products}: Props) => {
         fetchData();
     }, [filters]);
 
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+    // useEffect(() => {
+    //     setIsClient(true);
+    // }, [isClient]);
     // ✅ Cải thiện useEffect với kiểm tra an toàn hơn
     useEffect(() => {
         
