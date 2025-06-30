@@ -5,7 +5,7 @@ import { ChevronDown, ChevronUp, Search, Smartphone, Headphones, Laptop, Gamepad
 const FAQ = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
-  const [openItems, setOpenItems] = useState({});
+  const [openItems, setOpenItems] = useState<Record<number, boolean>>({});
 
   const categories = [
     { id: 'all', name: 'Tất cả', icon: HelpCircle },

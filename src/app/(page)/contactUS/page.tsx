@@ -14,7 +14,30 @@ export default function ContactUs() {
 //   const [isSubmitting, setIsSubmitting] = useState(false);
 //   const [submitted, setSubmitted] = useState(false);
 
-  const handleInputChange = (e) => {
+  // interface ContactFormData {
+  //   name: string;
+  //   email: string;
+  //   phone: string;
+  //   subject: string;
+  //   category: string;
+  //   message: string;
+  // }
+
+  // interface ContactInfoItem {
+  //   icon: React.ElementType;
+  //   title: string;
+  //   info: string;
+  //   subInfo: string;
+  //   color: string;
+  // }
+
+  // interface FeatureItem {
+  //   icon: React.ElementType;
+  //   title: string;
+  //   desc: string;
+  // }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -227,10 +250,11 @@ export default function ContactUs() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
                       Danh Mục *
                     </label>
                     <select
+                      id="category"
                       name="category"
                       value={formData.category}
                       onChange={handleInputChange}
@@ -269,7 +293,7 @@ export default function ContactUs() {
                     value={formData.message}
                     onChange={handleInputChange}
                     required
-                    rows="5"
+                    rows={5}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
                     placeholder="Mô tả chi tiết vấn đề hoặc yêu cầu của bạn..."
                   ></textarea>

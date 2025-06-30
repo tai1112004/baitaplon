@@ -292,7 +292,11 @@ const ElectronicsBlog = () => {
                           <Heart className="w-4 h-4" />
                           <span className="text-sm">{post.likes}</span>
                         </button>
-                        <button className="text-purple-300 hover:text-blue-400 transition-colors">
+                        <button
+                          className="text-purple-300 hover:text-blue-400 transition-colors"
+                          title="Chia sẻ bài viết"
+                          aria-label="Chia sẻ bài viết"
+                        >
                           <Share2 className="w-4 h-4" />
                         </button>
                       </div>
