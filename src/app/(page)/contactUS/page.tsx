@@ -11,8 +11,8 @@ export default function ContactUs() {
     category: '',
     message: ''
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+//   const [isSubmitting, setIsSubmitting] = useState(false);
+//   const [submitted, setSubmitted] = useState(false);
 
   const handleInputChange = (e) => {
     setFormData({
@@ -169,7 +169,7 @@ export default function ContactUs() {
                 <p className="text-gray-600">Chúng tôi luôn sẵn sàng hỗ trợ bạn với mọi thắc mắc về sản phẩm và dịch vụ</p>
               </div>
 
-              {submitted && (
+              {false && (
                 <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                   <div className="flex items-center space-x-2 text-green-600">
                     <div className="w-5 h-5 bg-green-600 rounded-full flex items-center justify-center">
@@ -277,10 +277,10 @@ export default function ContactUs() {
 
                 <button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={false}
                   className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 px-6 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
                 >
-                  {isSubmitting ? (
+                  {false ? (
                     <>
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                       <span>Đang Gửi...</span>
