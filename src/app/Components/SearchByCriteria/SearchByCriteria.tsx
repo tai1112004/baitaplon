@@ -40,10 +40,7 @@ type data  = {
     brand:number ; 
     category:number ; 
 }
-interface ItemsSearch {
-    name: string | null;
-    id: string | null;
-}
+
 type Props = {
     data_products: { products: data[] };
 }
