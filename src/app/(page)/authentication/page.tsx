@@ -557,8 +557,7 @@ const handleSubmitRegister = (e: React.FormEvent<HTMLFormElement>) => {
                   placeholder="Password" 
                   name="password"
                   value={formData.password}
-                  onChange={handleInputChange}
-                  required 
+                  onChange={handleInputChange} 
                 />
                 <i className='bx bxs-lock-alt'></i>
               </div>

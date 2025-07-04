@@ -1,7 +1,7 @@
 "use client";
 import { BoxChat } from "../BoxChat/BoxChat";
 import { useState, useCallback, useEffect } from 'react';
-import { Star, Heart, ShoppingCart, Filter, SortAsc } from 'lucide-react';
+import { Star, Heart, ShoppingCart, Filter, SortAsc ,Headset } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { getCookie } from "@/app/function/GetCookie/GetCookie";
 import { AddCartPage } from "../notification/addCart";
@@ -321,16 +321,41 @@ export const SearchByCriteria = ({data_products}: Props) => {
                                     </div>
 
                                     {/* Add to Cart Button */}
-                                    <button 
-                                        onClick={(e) => {
+                                     {
+                                        (item.price > 0) ? (
+                                            <button 
+                                            onClick={(e) => {
                                             e.stopPropagation() ; 
                                             handleClickAddCart(item._id)
                                         }}
+                                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
+                                    
+                                            <>
+                                            <ShoppingCart className="w-5 h-5" />
+                                            Thêm vào giỏ hàng
+                                            </>
+                                            
+                                        
+                                    </button>
+                                            
+                                        ): (
+                                            <button 
+                                        onClick={(e) => {
+                                            e.stopPropagation() ; 
+                                            
+                                        }}
                                         className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
                                     >
-                                        <ShoppingCart className="w-5 h-5" />
-                                        Thêm vào giỏ hàng
+                                            <><Headset  className="w-5 h-5" />
+                                                Liên Hệ 
+                                            </>
+                                        
+                                            
+                                        
+                                        
                                     </button>
+                                        )}
+                                    
                                 </div>
 
                                 {/* Hover overlay */}
