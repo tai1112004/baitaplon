@@ -2,11 +2,11 @@ export const Section1=()=>{
     return (
         <>
             <div className="section1 ">
-                <div className="inner_wrap  flex h-[100vh]">
+                <div className="inner_wrap  flex">
                     <div className="content w-[40%] ml-[20px]">
                         <h2 className="title   text-[#042352]">
                             <div className="title_main mb-[50px] font-[700] text-[64px]">
-                                Tech Heim
+                                Anh em Rọt
                             </div>
                             <div className="description mb-[110px] font-[500] text-[32px] flex ">
                                 join the <p className="text-[#F45E0C] mx-[10px]"> digital revolution </p> with us

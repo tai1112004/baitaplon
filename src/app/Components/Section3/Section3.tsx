@@ -145,7 +145,7 @@ export const Section3 = () => {
                                     Sản phẩm
                                 </h2>
                                 <h3 className="text-2xl lg:text-3xl font-light text-blue-100 mb-4">
-                                    Liên quan
+                                    Có giảm giá
                                 </h3>
                                 <div className="w-16 h-1 bg-gradient-to-r from-yellow-400 to-orange-500 mx-auto lg:mx-0 rounded-full"></div>
                             </div>
