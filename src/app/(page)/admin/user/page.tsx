@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { Users, Edit3, Trash2, Plus, Shield, User } from 'lucide-react';
 import { adminApi, generalApi } from '../../../../../lib/api';
 import { getCookie } from '@/app/function/GetCookie/GetCookie';
+
 type userType = 
 {
   id: number; 
@@ -12,7 +13,6 @@ type userType =
   role: string;
   password?: string;
 }
-
 
 const UserManagement = () => {
   const [users, setUsers] = useState<userType[]>([]);
@@ -33,43 +33,45 @@ const UserManagement = () => {
       });
       const data = await response.json();
       setUsers(data);
-
-  }
-    fetchUsers();
-},[])
-const changeRole = async (userId:number, name:string) => {
-  await fetch(`${adminApi}changeRoleUser/${userId}` ,{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      "authorization": `Bearer ${token}`
-    },
-    body: JSON.stringify({name})
-  })
-}
-const deleteUserAPI = async (userId:number) => {
-  await fetch(`${adminApi}deleteUser/${userId}` ,{
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      "authorization": `Bearer ${token}`
     }
-  })
-}
-const registerUser = async (user:userType) => {
-  await fetch(`${generalApi}register`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(user)
-  });
-}
+    fetchUsers();
+  },[])
+
+  const changeRole = async (userId:number, name:string) => {
+    await fetch(`${adminApi}changeRoleUser/${userId}` ,{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        "authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({name})
+    })
+  }
+
+  const deleteUserAPI = async (userId:number) => {
+    await fetch(`${adminApi}deleteUser/${userId}` ,{
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        "authorization": `Bearer ${token}`
+      }
+    })
+  }
+
+  const registerUser = async (user:userType) => {
+    await fetch(`${generalApi}register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user)
+    });
+  }
+
   // Xóa người dùng
   const deleteUser = (userId:number) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa người dùng này?')) {
       deleteUserAPI(userId);
-
       setUsers(users.filter(user => user.id !== userId));
     }
   };
@@ -123,10 +125,6 @@ const registerUser = async (user:userType) => {
       ? 'bg-purple-100 text-purple-800 border-purple-200' 
       : 'bg-blue-100 text-blue-800 border-blue-200';
   };
-
-  // const getRoleIcon = (role:string) => {
-  //   return role === 'ADMIN' ? <Shield className="w-4 h-4" /> : <User className="w-4 h-4" />;
-  // };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -285,13 +283,14 @@ const registerUser = async (user:userType) => {
                     placeholder="Nhập email"
                   />
                 </div>
+                
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Mật Khẩu</label>
                   <input
                     type="text"
-                    value={isEditing ? selectedUser?.password ?? '' : newUser.password}
+                    value={isEditing ? (selectedUser?.password ?? '') : (newUser.password ?? '')}
                     onChange={(e) => isEditing 
-                      ? setSelectedUser({...selectedUser, password: e.target.value})
+                      ? selectedUser && setSelectedUser({...selectedUser, password: e.target.value})
                       : setNewUser({...newUser, password: e.target.value})
                     }
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -302,9 +301,9 @@ const registerUser = async (user:userType) => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Vai Trò</label>
                   <select
-                    value={isEditing ? selectedUser?.role ?? '' : newUser.role}
+                    value={isEditing ? (selectedUser?.role ?? '') : newUser.role}
                     onChange={(e) => isEditing 
-                      ? setSelectedUser({...selectedUser, role: e.target.value})
+                      ? selectedUser && setSelectedUser({...selectedUser, role: e.target.value})
                       : setNewUser({...newUser, role: e.target.value})
                     }
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
