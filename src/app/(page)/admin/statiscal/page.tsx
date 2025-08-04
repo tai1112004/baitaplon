@@ -66,7 +66,7 @@ const SalesDashboard = () => {
     return new Intl.NumberFormat('vi-VN').format(num);
   };
 
-  const StatCard = ({ title, value, change, icon: Icon, trend, color } :{title:string , value : string , change: string  , color : string ,trend: string , icon:React.ComponentType }) => (
+const StatCard = ({ title, value, change, icon: Icon, trend, color } :{title:string , value : string , change: string  , color : string ,trend: string , icon:React.ComponentType<{ className?: string }> }) => (
     <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
       <div className="flex items-center justify-between">
         <div>
