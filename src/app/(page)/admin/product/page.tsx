@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useEffect } from 'react';
 import { Plus,  X, Package, Building2, Save, Image, Edit2, Trash2, Grid3X3 } from 'lucide-react';
 import { adminApi, generalApi } from '../../../../../lib/api';
@@ -302,14 +302,14 @@ const AdminPanel = () => {
     }));
   };
 
-  const handleBrandFormChange = (e) => {
+  const handleBrandFormChange = (e: ChangeEvent<HTMLInputElement>) => {
     setBrandForm(prev => ({
       ...prev,
       [e.target.name]: e.target.value
     }));
   };
 
-  const handleCategoryFormChange = (e) => {
+  const handleCategoryFormChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCategoryForm(prev => ({
       ...prev,
       [e.target.name]: e.target.value
