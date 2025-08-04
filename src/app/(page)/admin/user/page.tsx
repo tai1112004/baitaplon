@@ -13,13 +13,7 @@ type userType =
   password?: string;
 }
 
-type newUserType = 
-{
-  name: string;
-  email: string;
-  role: string;
-  password?: string;
-}
+
 const UserManagement = () => {
   const [users, setUsers] = useState<userType[]>([]);
   const token = getCookie('token');
