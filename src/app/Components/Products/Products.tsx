@@ -7,6 +7,7 @@ import { getCookie } from "@/app/function/GetCookie/GetCookie";
 import { AddCartPage } from "../notification/addCart";
 import { WrongPage } from "../notification/wrong";
 import { NullPage } from "../notification/null";
+import { userApi } from "../../../../lib/api";
 const LoadingThreeDotsJumping = () => (
   <div className="flex space-x-2">
     <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
@@ -23,23 +24,40 @@ const PageNull = () => (
     <p className="text-gray-500 mb-6">Hãy tìm sản phẩm khác nhé</p>
     </div>
 )
-type data  = {
-    _id: number ; 
-    name:string ; 
-    image:string ; 
-    description:string ; 
-    rating:number ; 
-    price:number ; 
-    countInStock:number ; 
-    discount:number; 
-    ram?:string ; 
-    screen_size?:string ; 
-    processor?:string ; 
-    gpu_brand?:string ; 
-    drive_size?:string ; 
-    brand:number ; 
-    category:number ; 
+
+type data = {
+    id: number;
+    name: string;
+    quantity: string;
+    description: string;
+    color: string;
+    price: number;
+    discount:  number ; 
+    RAM: string;
+    screen?: string;
+    gpu?:    string;
+    cpu?:    string;
+    driver_size?: string;
+    count_camera?: string;
+    resolution?:     string;
+    sensor?:     string;
+    capacity_battery?: string;
+    operating_system?: string;
+    connectivity?: string;
+    audio_technical?: string;
+    style?: string;
+    time_battery?: string;
+    delay?: string;
+    support_stylus?: false,
+    brand: string;
+    categories : string ; 
+    images : imageType[] ; 
 }
+type imageType = {
+    id: number;
+    image: string ; 
+}
+
 interface ItemsSearch {
     name: string | null;
     id: string | null;
@@ -73,45 +91,51 @@ export const Products = ({data_products}: Props) => {
         gpuBrand: [] as string[],
         driveSize: [] as string[]
     });
+    const formatCurrency = (amount : number) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(amount);
+  };
     // const [isClient, setIsClient] = useState(false);
-    useEffect(() => {
-         let url = "https://ecommerce-django-production-6256.up.railway.app/api/products/?";
-        if (filters.ram.length > 0) {
-            const ramValues = filters.ram.map(ram => ram.replace(' GB', ''));
-            url += `ram=${ramValues.join('&ram= ')}&`;
-        }
-        if (filters.processor.length > 0) {
-            url += `processor=${filters.processor.join('&processor=')}&`;
-        }
-        if (filters.gpuBrand.length > 0) {
-            url += `gpu_brand=${filters.gpuBrand.join('&gpu_brand=')}&`;
-        }
-        if (filters.driveSize.length > 0) {
-            const dirverSizeValues = filters.ram.map(ram => ram.replace(' GB', ''));
+    // useEffect(() => {
+    //      let url = "https://ecommerce-django-production-6256.up.railway.app/api/products/?";
+    //     if (filters.ram.length > 0) {
+    //         const ramValues = filters.ram.map(ram => ram.replace(' GB', ''));
+    //         url += `ram=${ramValues.join('&ram= ')}&`;
+    //     }
+    //     if (filters.processor.length > 0) {
+    //         url += `processor=${filters.processor.join('&processor=')}&`;
+    //     }
+    //     if (filters.gpuBrand.length > 0) {
+    //         url += `gpu_brand=${filters.gpuBrand.join('&gpu_brand=')}&`;
+    //     }
+    //     if (filters.driveSize.length > 0) {
+    //         const dirverSizeValues = filters.ram.map(ram => ram.replace(' GB', ''));
             
-            url += `drive_size=${dirverSizeValues.join('&drive_size=')}&`;
-        }
-        const fetchData = async () => {
-            const res = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-            if(res.status===500)
-            {
-                setLoading(true);
+    //         url += `drive_size=${dirverSizeValues.join('&drive_size=')}&`;
+    //     }
+    //     const fetchData = async () => {
+    //         const res = await fetch(url, {
+    //             method: 'GET',
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //         });
+    //         if(res.status===500)
+    //         {
+    //             setLoading(true);
 
-            }
-            else if(res.status===200)
-            {
-                const data = await res.json();
-                setsanpham(data.products);
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, [filters]);
+    //         }
+    //         else if(res.status===200)
+    //         {
+    //             const data = await res.json();
+    //             setsanpham(data.products);
+    //             setLoading(false);
+    //         }
+    //     };
+    //     fetchData();
+    // }, [filters]);
 
     // useEffect(() => {
     //     setIsClient(true);
@@ -128,40 +152,9 @@ export const Products = ({data_products}: Props) => {
         }
     }, [products, data_products]);
      
-    const handleClickTransferPage = useCallback((id:number , category:number) => {
+    const handleClickTransferPage = useCallback((id:number , category:string) => {
         let url:string  ;
-        if(category===3) 
-        {
-            url = `/products/mobilePhones/${id}` ;
-        }
-        else if(category===1)
-        {
-            url = `/products/laptopAndComputer/${id}` ;
-        }
-        else if(category===4)
-        {
-            url = `/products/tablets/${id}` ;
-        }
-        else if(category===6)
-        {
-            url = `/products/audio/${id}` ;
-        }
-        else if(category ===7)
-        {
-            url = `/products/cameras/${id}` ;
-        }
-        else if(category===5)
-        {
-            url = `/products/wearables/${id}` ;
-        }
-        else if(category===2)
-        {
-            url = `/products/gaming/${id}` ;
-        }
-        else if(category===8)
-        {
-            url = `/products/networking/${id}` ;
-        }
+        url = `/products/${category}/${id}`;
         setLoading(true);
         setTimeout(() => {
             router.push(url) ; 
@@ -177,10 +170,6 @@ export const Products = ({data_products}: Props) => {
         sortedProducts.sort((a, b) => a.discount - b.discount);
     } else if (sortBy === "discount_desc") {
         sortedProducts.sort((a, b) => b.discount - a.discount);
-    } else if (sortBy === "rate_asc") {
-        sortedProducts.sort((a, b) => a.rating - b.rating);
-    } else if (sortBy === "rate_desc") {
-        sortedProducts.sort((a, b) => b.rating - a.rating);
     }
     setsanpham(sortedProducts);
 }, [sortBy, products]);
@@ -321,7 +310,7 @@ export const Products = ({data_products}: Props) => {
         if(token)
         { 
             const add_cart = async() =>{
-                 await fetch(`https://ecommerce-django-production-6256.up.railway.app/api/orders/addtocart/${id}/`,{
+                 await fetch(`${userApi}addBasket/${id}`,{
                         method: 'POST',
                         headers: {
                         "Content-Type": "application/json",
@@ -597,7 +586,7 @@ export const Products = ({data_products}: Props) => {
                             <div 
                                 key={index} 
                                 className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden border border-gray-100"
-                                onClick={() => handleClickTransferPage(item._id,item.category)}
+                                onClick={() => handleClickTransferPage(item.id,item.categories)}
                             >
                                 {/* Discount Badge */}
                                 {item.discount > 0 && (
@@ -610,15 +599,15 @@ export const Products = ({data_products}: Props) => {
                                 <button
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        toggleFavorite(item._id);
+                                        toggleFavorite(item.id);
                                     }}
                                     className="absolute top-4 right-4 z-10 p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-all duration-200 shadow-lg"
-                                    aria-label={favorites.has(item._id) ? "Bỏ yêu thích" : "Thêm vào yêu thích"}
-                                    title={favorites.has(item._id) ? "Bỏ yêu thích" : "Thêm vào yêu thích"}
+                                    aria-label={favorites.has(item.id) ? "Bỏ yêu thích" : "Thêm vào yêu thích"}
+                                    title={favorites.has(item.id) ? "Bỏ yêu thích" : "Thêm vào yêu thích"}
                                 >
                                     <Heart 
                                         className={`w-5 h-5 transition-colors duration-200 ${
-                                            favorites.has(item._id) 
+                                            favorites.has(item.id) 
                                                 ? 'fill-red-500 text-red-500' 
                                                 : 'text-gray-400 hover:text-red-500'
                                         }`}
@@ -628,7 +617,7 @@ export const Products = ({data_products}: Props) => {
                                 {/* Product Image */}
                                 <div className="relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 h-56">
                                     <img 
-                                        src={item.image} 
+                                        src={item.images[0].image} 
                                         alt={item.name}
                                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                     />
@@ -644,9 +633,9 @@ export const Products = ({data_products}: Props) => {
                                     {/* Rating */}
                                     <div className="flex items-center gap-2 mb-4">
                                         <div className="flex items-center gap-1">
-                                            {renderStars(item.rating)}
+                                            {renderStars(3)}
                                         </div>
-                                        <span className="text-sm text-gray-600">({item.rating})</span>
+                                        <span className="text-sm text-gray-600">({3})</span>
                                     </div>
 
                                     {/* Price */}
@@ -654,11 +643,11 @@ export const Products = ({data_products}: Props) => {
                                         <div className="flex items-center gap-2">
                                             {item.discount > 0 && (
                                                 <span className="text-lg text-gray-400 line-through">
-                                                    {item.price}
+                                                    {formatCurrency(item.price)}
                                                 </span>
                                             )}
                                             <span className="text-2xl font-bold text-gray-900">
-                                                {item.price - (item.price * item.discount / 100)}
+                                                {formatCurrency(item.price - (item.price * item.discount / 100))}
                                             </span>
                                         </div>
                                     </div>
@@ -669,7 +658,7 @@ export const Products = ({data_products}: Props) => {
                                             <button 
                                             onClick={(e) => {
                                             e.stopPropagation() ; 
-                                            handleClickAddCart(item._id)
+                                            handleClickAddCart(item.id)
                                         }}
                                         className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
                                     

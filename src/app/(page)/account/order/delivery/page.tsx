@@ -5,18 +5,71 @@ import { useEffect } from "react"
 import { useRouter } from "next/navigation";
 import { LoadingPage } from "@/app/Components/notification/loading";
 import { NullPage } from "@/app/Components/notification/null";
+import { userApi } from "../../../../../../lib/api";
 type OrderItem = {
-    image: string;
-    name: string;
+    id: number;
+    quantity: number;
+    price: number;
+    note: string;
+    product : productType ;  
+    // add other properties if needed
 };
+type shippingType = {
+    id: number;
+    receiver: string;
+    phone_Receiver: string;
+    address_receiver: string;
+    isDelivered: boolean;
+    note: string;
+};
+type userType = {
+    id: number;
+    name: string;
+    email: string;
+};
+type productType = {
+    id: number;
+    name: string;
+    quantity: number;
+    description: string;
+    color: string;
+    price: number;
+    discount:  number ; 
+    RAM: string;
+    screen?: string;
+    gpu?:    string;
+    cpu?:    string;
+    driver_size?: string;
+    count_camera?: string;
+    resolution?:     string;
+    sensor?:     string;
+    capacity_battery?: string;
+    operating_system?: string;
+    connectivity?: string;
+    audio_technical?: string;
+    style?: string;
+    time_battery?: string;
+    delay?: string;
+    support_stylus?: false,
+    brand: string;
+    categories : string ; 
+    images : imageType[] ; 
+}
+type imageType = {
+    id: number;
+    image: string ; 
+}
 
 type Order = {
-    _id: number;
-    createdAt: string;
-    totalPrice: number;
-    receiver: string;
-    orderItems: OrderItem[];
-    isDelivered: boolean;
+    id: number ; 
+    order_Date: string;
+    total_price: number;
+    note : string ;
+    shipping : shippingType;
+    status: string;
+    user : userType ; 
+    orderDetails: OrderItem[];
+    // add other properties if needed
 };
 
 export default function DeliveryPage (){
@@ -27,7 +80,7 @@ export default function DeliveryPage (){
     useEffect(()=>{ 
         const fetchdata = async () =>
         {
-            const res = await fetch("https://ecommerce-django-production-6256.up.railway.app/api/orders/myorders",{
+            const res = await fetch(`${userApi}order/status/shipped`,{
                 method: "GET",
                 headers:{
                     "Content-Type": "application/json",
@@ -36,11 +89,17 @@ export default function DeliveryPage (){
 
             })
         const allOrders = await res.json();
-        const deliveredOrders = allOrders.filter((item: Order) => item.isDelivered === true);
-        setdata(deliveredOrders);
+        // const deliveredOrders = allOrders.filter((item: Order) => item.isDelivered === true);
+        setdata(allOrders as Order[]); // Assuming the API returns an array of orders
         }
         fetchdata() ;
     }, [token]) 
+      const formatCurrency = (amount : number) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(amount);
+  };
     const handleClick=(id:number)=>{
         setloading(true) ; 
         setTimeout(() => {
@@ -98,25 +157,25 @@ export default function DeliveryPage (){
                                                     </tr>
                                                 
                                                     <tr className="text-[18px] font-light w-[100%] text-center">
-                                                        <td>{item._id}</td>
-                                                        <td>{item.createdAt}</td>
-                                                        <td>{item.totalPrice}</td>
-                                                        <td>{item.receiver}</td>
+                                                        <td>{item.id}</td>
+                                                        <td>{item.order_Date}</td>
+                                                        <td>{formatCurrency(item.total_price)}</td>
+                                                        <td>{item.shipping.receiver}</td>
 
                                                     </tr>   
                                                 
                                             
                                             </table>
-                                            <div className="text-primary-200" onClick={()=>handleClick(item._id)}>Order Status </div>
+                                            <div className="text-primary-200" onClick={()=>handleClick(item.id)}>Order Status </div>
                                         </div>
                                         
                                         <div className="order-imgae flex gap-5 flex-wrap ">
                                             {
-                                                item.orderItems.map((items:OrderItem)=>
+                                                item.orderDetails.map((items:OrderItem)=>
                                                 (
                                                     <>
                                                         <div className="w-[100px] h-[100px]">
-                                                            <img src={items.image} title={items.name}  className="w-[100px] h-[100px]"/>
+                                                            <img src={items.product.images[0]?.image} title={items.product.name}  className="w-[100px] h-[100px]"/>
                                                         </div>
                                                         
                                                     </>

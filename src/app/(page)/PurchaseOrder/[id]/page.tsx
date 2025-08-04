@@ -3,30 +3,81 @@ import DescriptionAlerts from "@/app/Components/Alert/Alert_Purhase/Alert_purcha
 import { getCookie } from "@/app/function/GetCookie/GetCookie";
 import { useRouter,useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { generalApi, userApi } from "../../../../../lib/api";
+type data = {
+    id: number;
+    name: string;
+    quantity: number;
+    description: string;
+    color: string;
+    price: number;
+    discount:  number ; 
+    RAM: string;
+    screen?: string;
+    gpu?:    string;
+    cpu?:    string;
+    driver_size?: string;
+    count_camera?: string;
+    resolution?:     string;
+    sensor?:     string;
+    capacity_battery?: string;
+    operating_system?: string;
+    connectivity?: string;
+    audio_technical?: string;
+    style?: string;
+    time_battery?: string;
+    delay?: string;
+    support_stylus?: false,
+    brand: string;
+    categories : string ; 
+    images : imageType[] ; 
+}
+type imageType = {
+    id: number;
+    image: string ; 
+}
 export default function PurchaseOrderID() {
     const param = useParams<{id:string}>(); 
     const id = parseInt(param.id) ; 
-    interface Item {
-        image: string;
-        name: string;
-        price: number;
-        discount: number;
-        // add other properties as needed
-    }
-    const [items, setdata] = useState<Item>({
-        image: "",
+
+    const [items, setdata] = useState<data>({
+        id: 0,
         name: "",
+        quantity: 0,
+        description: "",
+        color: "",
         price: 0,
         discount: 0,
+        RAM: "",
+        screen: "",
+        gpu: "",
+        cpu: "",
+        driver_size: "",
+        count_camera: "",
+        resolution: "",
+
+        sensor: "",
+        capacity_battery: "",
+        operating_system: "",
+        connectivity: "",
+        audio_technical: "",
+        style: "",
+        time_battery: "",
+        delay: "",
+        support_stylus: false,
+        brand: "",
+        categories: "",
+        images: []
+
+
         // initialize other properties as needed
     });
     const token = getCookie("token") ; 
     useEffect(()=>{
-        if(token)
-        {
+        
             const fetchData = async () =>
             {
-                const res = await fetch(`https://ecommerce-django-production-6256.up.railway.app/api/products/${id}`,{
+                const res = await fetch(`${generalApi}getProducts/${id}`,{
                     method : "GET" , 
                     headers :{
                         "Content-Type": "application/json",
@@ -34,12 +85,11 @@ export default function PurchaseOrderID() {
 
                 })
                 setdata(await res.json()) ; 
-
+                console.log("data product " + items) ;
             }
             fetchData() ;
-            console.log(items) ; 
-        }
-    },[token])
+        console.log("tao dang o day " + items) ; 
+    },[])
 
     const tongtien: number = items.price * 1 - (items.price * (items.discount/100));
 
@@ -52,31 +102,37 @@ export default function PurchaseOrderID() {
         const form = e.target as HTMLFormElement;
         const user = (form.user as HTMLInputElement).value; 
         const address = (form.address as HTMLInputElement).value;
+        const numberPhone = (form.numberPhone as HTMLInputElement).value;
+        const note = (form.note as HTMLInputElement).value;
+        const note_shipper = (form.note_shipper as HTMLInputElement).value;
         setAlert(true);
         setProgress(0);
         if(token)
         {
              const BuyProduct = async () =>{
-                const res = await fetch(`https://ecommerce-django-production-6256.up.railway.app/api/orders/buynow/${id}/`,{
+                const res = await fetch(`${userApi}buyNow/${id}`,{
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`
                     },
                     body: JSON.stringify({
-                    paymentMethod: "cash" ,
-                    taxPrice: 20 , 
-                    shippingPrice: 20, 
-                    totalPrice:tongtien  , 
-                    shippingAddress : {
-                        address: address,
-                        city : "Ha Noi" , 
-                        postalCode: "lololo" ,
-                        country: "vn" ,
+                    note: note  , 
+                    shipping : 
+                    {
+                        receiver : user , 
+                        phone_Receive : numberPhone , 
+                        address_receiver : address , 
+                        note : note_shipper 
+                        
                     } , 
-                    receiver: user ,
-                    qty : 1 
-        })
+
+                    orderDetails :
+                    {
+                        quantity : 1
+
+                    }
+                })
                 }
                 )
                 const data = await res.json();
@@ -119,9 +175,10 @@ export default function PurchaseOrderID() {
                     <form action="" className="flex gap-[24px] mt-[48px]" onSubmit={hanldeBuyProduct}>
                         <div className="w-[60%] px-[32px] py-[24px] border-[1px] border-[#EDEDED] flex flex-col gap-[32px]">
                             <div className="flex flex-col gap-[8px]">
-                                <label htmlFor="user" className="text-[20px] text-[#0C0C0C] font-[500]">User</label>
+                                <label htmlFor="user" className="text-[20px] text-[#0C0C0C] font-[500]">Người Nhận</label>
                                 <input type="text" name="user" id="user" className="h-[48px] bg-[#F9F9F9] border-[1px] border-[#F6F6F6] rounded-[8px] px-[15px]" placeholder="Nhập tên người nhận" required />
                             </div>
+                            
                             <div className="flex flex-col gap-[8px]">
                                 <label htmlFor="address" className="text-[20px] text-[#0C0C0C] font-[500]">Địa Chỉ</label>
                                 <input type="text" id="address" name="address" className="h-[48px] bg-[#F9F9F9] border-[1px] border-[#F6F6F6] rounded-[8px] px-[15px]" placeholder="Nhập địa chỉ người nhận" required/>
@@ -130,6 +187,14 @@ export default function PurchaseOrderID() {
                                 <label htmlFor="numberPhone text-[20px] text-[#0C0C0C] font-[500] ">Số Điện Thoại</label>
                                 <input type="tel" id="numberPhone" name="numberPhone" pattern="[0]{1}[0-9]{9}" placeholder="0-123-456-789" className="h-[48px] bg-[#F9F9F9] border-[1px] border-[#F6F6F6] rounded-[8px] px-[15px]"/>
                             </div>
+                            <div className="flex flex-col gap-[8px]">
+                                <label htmlFor="note" className="text-[20px] text-[#0C0C0C] font-[500]">NOTE cho quán</label>
+                                <input type="text" name="note" id="note" className="h-[48px] bg-[#F9F9F9] border-[1px] border-[#F6F6F6] rounded-[8px] px-[15px]" placeholder="ghi chú cho quán" required />
+                            </div>
+                            <div className="flex flex-col gap-[8px]">
+                                <label htmlFor="note_shipper" className="text-[20px] text-[#0C0C0C] font-[500]">NOTE cho shipper</label>
+                                <input type="text" name="note_shipper" id="note_shipper" className="h-[48px] bg-[#F9F9F9] border-[1px] border-[#F6F6F6] rounded-[8px] px-[15px]" placeholder="ghi chu cho tài xế" required />
+                            </div>
                          </div>
                         <div className="w-[40%] px-[24px] py-[24px]">
                             <h2 className="font-[500] text-[#0C0C0C] text-[24px]">Your Order</h2>
@@ -137,7 +202,9 @@ export default function PurchaseOrderID() {
                             <>
                                 <div className="productItem flex px-[6px] border-b-[1px] border-b-[#CBCBCB] gap-[10px]">
                                     <div className="image w-[30%]">
-                                        <img src={items.image} alt=""  className="w-[100%]"/>
+                                        <img 
+                                        src={items.images[0]?.image || ""}
+                                        alt=""  className="w-[100%]"/>
                                     </div>
                                     <div className="flex flex-col gap-[23px]  text-[17px] font-[300] text-[#2D2D2D] w-[70%]">
                                         <h2>
@@ -145,7 +212,7 @@ export default function PurchaseOrderID() {
                                                 {items.name} 
                                             </div>
                                             <div className="color_quantity ">
-                                                <div className="">Black</div>
+                                                <div className="">{items.color}</div>
                                                 <div className="quantity">x 1</div>
                                             </div>
                                         </h2>

@@ -4,6 +4,7 @@ import { Footer } from "./Footer/Footer";
 import { usePathname } from "next/navigation";
 import { ConversionProcess } from "./ConversionProcess/ConversionProcess";
 import { AccountBar } from "./AccountBar/AccountBar";
+import { AccountBarAdmin } from "./AccountBarAdmin/AccountBarAdmin";
 
 export function LayoutWrapper({children}: Readonly<{children: React.ReactNode;}>) {
     const Pathname= usePathname();
@@ -42,6 +43,23 @@ export function LayoutWrapper({children}: Readonly<{children: React.ReactNode;}>
           <div className="container mx-auto my-0 w-[1440px]" >
             <div className="inner_wrap flex gap-[50px]">
               <AccountBar/>
+              {children}
+            </div>
+            
+            
+          </div>
+          <Footer/>
+        </>
+      )
+    }
+    if(Pathname.startsWith("/admin"))
+    {
+      return (
+        <>\
+        <Header/>
+          <div className="container mx-auto my-0 w-[1440px]" >
+            <div className="inner_wrap flex gap-[50px]">
+              <AccountBarAdmin/>
               {children}
             </div>
             

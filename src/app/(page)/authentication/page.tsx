@@ -4,6 +4,7 @@ import {WrongPage} from '@/app/Components/notification/wrong';
 import {useState } from 'react';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation'
+import { generalApi } from '../../../../lib/api';
 export default function LoginSignupForm() {
   const [isActive, setIsActive] = useState(false);
   const [success,setsuccess] = useState(false);
@@ -17,7 +18,7 @@ export default function LoginSignupForm() {
         setIsClient(true);
     }, []);
   const [formData, setFormData] = useState({
-    username: '',
+    name: '',
     email: '',
     password: ''
   });
@@ -27,7 +28,7 @@ export default function LoginSignupForm() {
     password: ''
   });
   const [user, setuser] = useState({
-    username: '',
+    name: '',
     password: '' 
   });
   const datasuccessLogin ={
@@ -43,7 +44,7 @@ export default function LoginSignupForm() {
     title: "Đã có người sử dụng tài khoản của bạn  "
   }
   useEffect(()=>{
-    if(user.username === ''|| user.password=== '' ) 
+    if(user.name === ''|| user.password=== '' ) 
       {
         console.log("dang chay vao day")
         return ;
@@ -51,14 +52,14 @@ export default function LoginSignupForm() {
     const login = async () =>
     {
 
-      const response = await fetch('https://ecommerce-django-production-6256.up.railway.app/api/users/login/', {
+      const response = await fetch(`${generalApi}login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body : JSON.stringify(user), 
       }) ; 
-      
+      console.log(user) ; 
       if(response.status==200)
       {
         setsuccess(true) ; 
@@ -68,9 +69,10 @@ export default function LoginSignupForm() {
         document.cookie = `token=${data.token}; path=/; max-age=86400`;
         setTimeout(() => {
           
-          if(data.isAdmin)
+          if(data.role === 'ADMIN')
         {
-           window.location.href = "https://ecommerce-django-production-6256.up.railway.app/admin";
+
+           window.location.href = `/admin/product` ;
         }
         else 
         {
@@ -98,7 +100,7 @@ export default function LoginSignupForm() {
       } 
     const register = async () =>
     {
-      const response = await fetch('https://ecommerce-django-production-6256.up.railway.app/api/users/register/', {
+      const response = await fetch(`${generalApi}register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -180,11 +182,11 @@ export default function LoginSignupForm() {
     e.preventDefault();
     console.log("da chay vao day")
     const target = e.target as typeof e.target & {
-      username: { value: string };
+      name: { value: string };
       password: { value: string };
     };
     const data = {
-      username: target.username.value, 
+      name: target.name.value, 
       password: target.password.value
     } ; 
     setuser(data); 
@@ -192,12 +194,12 @@ export default function LoginSignupForm() {
 const handleSubmitRegister = (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   const target = e.target as typeof e.target & {
-    username: { value: string };
+    name: { value: string };
     email: { value: string };
     password: { value: string };
   };
   const data = {
-    name: target.username.value,
+    name: target.name.value,
     email: target.email.value,
     password: target.password.value 
   };
@@ -544,8 +546,7 @@ const handleSubmitRegister = (e: React.FormEvent<HTMLFormElement>) => {
                 <input 
                   type="text" 
                   placeholder="Username" 
-                  name="username"
-                  value={formData.username}
+                  name="name"
                   onChange={handleInputChange}
                   required 
                 />
@@ -599,8 +600,7 @@ const handleSubmitRegister = (e: React.FormEvent<HTMLFormElement>) => {
                 <input 
                   type="text" 
                   placeholder="Username" 
-                  name="username"
-                  value={formData.username}
+                  name="name"
                   onChange={handleInputChange}
                   required 
                 />

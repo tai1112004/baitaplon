@@ -1,45 +1,63 @@
-"use client" 
+"use client"
+import { Products } from '@/app/Components/Products/Products';
 import {useState} from 'react';
-
 import { useEffect } from 'react';
+import { generalApi } from '../../../../../lib/api';
 
-import { Category } from "@/app/Components/Category/Category";
-import { SearchByCriteria } from "@/app/Components/SearchByCriteria/SearchByCriteria";
-type data  = {
-    _id: number ; 
-    name:string ; 
-    image:string ; 
-    description:string ; 
-    rating:number ; 
-    price:number ; 
-    countInStock:number ; 
-    discount:number; 
-    ram?:string ; 
-    screen_size?:string ; 
-    processor?:string ; 
-    gpu_brand?:string ; 
-    drive_size?:string ; 
-    brand:number ; 
-    category:number ; 
+type data = {
+    id: number;
+    name: string;
+    quantity: string;
+    description: string;
+    color: string;
+    price: number;
+    discount:  number ; 
+    RAM: string;
+    screen?: string;
+    gpu?:    string;
+    cpu?:    string;
+    driver_size?: string;
+    count_camera?: string;
+    resolution?:     string;
+    sensor?:     string;
+    capacity_battery?: string;
+    operating_system?: string;
+    connectivity?: string;
+    audio_technical?: string;
+    style?: string;
+    time_battery?: string;
+    delay?: string;
+    support_stylus?: false,
+    brand: string;
+    categories : string ; 
+    images : imageType[] ; 
 }
-export default function AudioPage() {
-    const [product, setproduct] = useState<data[]>([]);
-        useEffect(()=>{
-            const data_product = async () =>{
-                 // Lấy 7 trang (2,3,4,5,6,7,8) = 56 sản phẩm
-            const data = await fetch(`https://ecommerce-django-production-6256.up.railway.app/api/products/categories/Audio`)
-            const json = await data.json();
-        setproduct(Array.isArray(json.products) ? json.products : []); 
-                
-                
-            }
-            data_product() ; 
-        },[])
+type imageType = {
+    id: number;
+    image: string ; 
+}
+
+export default  function AudioPage() {
+    const [product, setproduct] = useState<data[]>([]); 
+    useEffect(() => {
+  const data_product = async () => {
+    const data = await fetch(`${generalApi}getProducts/Categories/audio`,{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        // body: JSON.stringify({name: "audio" }) 
+    } );
+    const json = await data.json();
+    setproduct(Array.isArray(json) ? json : []);// <-- lấy mảng sản phẩm
+  };
+  data_product();
+  console.log("tao dang ow day " + product) ; 
+}, []);
+    
     return (
         <>
-            <Category/>
-            <SearchByCriteria data_products={{ products: product as data[] }}/>
-            
+             <Products data_products={{ products: product as data[] }} />
         </>
     )
-}
+} 

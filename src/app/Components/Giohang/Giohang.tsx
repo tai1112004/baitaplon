@@ -9,6 +9,7 @@ import { NullPage } from "../notification/null";
 import { LoadingPage } from "../notification/loading";
 // import { WrongPage } from "../notification/wrong";
 import { Truck, Award, Trash2, Plus, Minus,  Package, CreditCard } from 'lucide-react';
+import { userApi } from '../../../../lib/api';
 
 // const DelPage = () => (
 //   <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-bounce">
@@ -43,14 +44,45 @@ const PageLoading = () => (
     </div>
   </div>
 );
-type CartItem = {
-    product: number;
+type CartItem = 
+    {
+        id : number ; 
+        quantity : number ;
+        product: product ; 
+    }
+type product = {
+    id: number;
     name: string;
-    image: string;
+    quantity: number;
+    description: string;
+    color: string;
     price: number;
-    qty: number;
-    // add other properties if needed
-};
+    discount:  number ; 
+    RAM: string;
+    screen?: string;
+    gpu?:    string;
+    cpu?:    string;
+    driver_size?: string;
+    count_camera?: string;
+    resolution?:     string;
+    sensor?:     string;
+    capacity_battery?: string;
+    operating_system?: string;
+    connectivity?: string;
+    audio_technical?: string;
+    style?: string;
+    time_battery?: string;
+    delay?: string;
+    support_stylus?: false,
+    brand: string;
+    categories : string ; 
+    images : imageType[] ; 
+}
+type imageType = {
+    id: number;
+    image: string ; 
+}
+
 
 export const Giohang =() =>{
     const [loading,setloading] = useState(false);
@@ -84,7 +116,7 @@ export const Giohang =() =>{
         if(token)
         {
             const cart = async () =>{
-                const res = await fetch("https://ecommerce-django-production-6256.up.railway.app/api/orders/cart/",{
+                const res = await fetch(`${userApi}getBasket`,{
                     method:"GET",
                     headers:{
                         "Content-Type" : "application/json",
@@ -92,8 +124,8 @@ export const Giohang =() =>{
                     }
                 })
             const data = await res.json();
-            if (Array.isArray(data)) {
-                setData(data);
+            if (Array.isArray(data.basketItem)) {
+                setData(data.basketItem as CartItem[]); // Ensure data is an array of CartItem
             } else {
                 setData([]);
             }
@@ -109,7 +141,7 @@ useEffect(()=>{
     if(Array.isArray(data) && data.length!==0)
     {
          tongtien = data.reduce((sum, items) => {
-        return sum + items.price * items.qty;
+        return sum + items.product.price * items.quantity;
         }, 0);
     }
     setsum(tongtien);
@@ -119,8 +151,8 @@ useEffect(()=>{
         const pointer = parseInt((e.target as HTMLButtonElement).id);
         const newData = data.map((item, index) => {
             if (pointer === index) {
-                if (item.qty > 1) {
-                    return { ...item, qty: item.qty - 1 };
+                if (item.quantity > 1) {
+                    return { ...item, quantity: item.quantity - 1 };
                 }
             }
             return item;
@@ -129,11 +161,12 @@ useEffect(()=>{
     }
     const handleClickIncrease = (e: React.MouseEvent<HTMLButtonElement>) =>
     {
-        const pointer = parseInt((e.target as HTMLButtonElement).id) ; 
+        const pointer = parseInt((e.target as HTMLButtonElement).id) ;
+         
         const newData = data.map((item, index) => {
             if (pointer === index) {
                 
-                    return { ...item, qty: item.qty + 1 };
+                    return { ...item, quantity: item.quantity + 1 };
                 
             }
             return item;
@@ -143,7 +176,7 @@ useEffect(()=>{
     }
     const handleClickDelete=(pointer:number)=>{
         const del = async() =>{
-             await fetch(`https://ecommerce-django-production-6256.up.railway.app/api/orders/removefromcart/${pointer}/`,{
+             await fetch(`${userApi}delBasket/${pointer}/`,{
                 method:'DELETE',
                 headers:{
                     'Content-Type':'application/json',
@@ -156,7 +189,7 @@ useEffect(()=>{
        
         const newData = data.filter((item) =>
         {
-            return item.product !== pointer ;
+            return item.id !== pointer ;
 
         }) 
         setData(newData);
@@ -218,8 +251,8 @@ useEffect(()=>{
                                                 <div className="flex-shrink-0">
                                                     <div className="w-32 h-32 bg-gray-100 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-300">
                                                         <img 
-                                                            src={item.image} 
-                                                            alt={item.name}
+                                                            src={item.product.images[0].image} 
+                                                            alt={item.product.name}
                                                             className="w-full h-full object-cover"
                                                         />
                                                     </div>
@@ -228,7 +261,7 @@ useEffect(()=>{
                                                 {/* Product Info */}
                                                 <div className="flex-1 min-w-0">
                                                     <h3 className="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">
-                                                        {item.name}
+                                                        {item.product.name}
                                                     </h3>
                                                     
                                                     {/* Product Features */}
@@ -250,13 +283,13 @@ useEffect(()=>{
                                                     {/* Price and Actions */}
                                                     <div className="flex items-center justify-between">
                                                         <div className="text-2xl font-bold text-gray-900">
-                                                            ${item.price.toLocaleString()}
+                                                            ${item.product.price.toLocaleString()}
                                                         </div>
                                                         
                                                         <div className="flex items-center gap-4">
                                                             {/* Delete Button */}
                                                             <button
-                                                                onClick={() => handleClickDelete(item.product)}
+                                                                onClick={() => handleClickDelete(item.id)}
                                                                 className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors duration-200"
                                                                 aria-label="Xóa sản phẩm khỏi giỏ hàng"
                                                                 title="Xóa sản phẩm khỏi giỏ hàng"
@@ -268,14 +301,14 @@ useEffect(()=>{
                                                             <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
                                                                 <button
                                                                     onClick={handleClickReduce}
-                                                                    disabled={item.qty <= 1}
+                                                                    disabled={item.quantity <= 1}
                                                                     className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                                                                     title="Giảm số lượng"
                                                                 >
                                                                     <Minus className="w-4 h-4" />
                                                                 </button>
                                                                 <div className="px-4 py-2 bg-gray-50 min-w-[3rem] text-center font-medium">
-                                                                    {item.qty}
+                                                                    {item.quantity}
                                                                 </div>
                                                                 <button
                                                                     onClick={ handleClickIncrease}

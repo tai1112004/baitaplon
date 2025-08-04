@@ -15,9 +15,7 @@ export  const LoadingPage= ()=> {
         play
         style={{ width: 150, height: 150 }}
       />
-      <p className="text-gray-600 mt-2">
-       Đợi một chút đi người đẹp
-      </p>
+      
     </div>
     </div>
   )

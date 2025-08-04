@@ -1,43 +1,62 @@
 "use client"
-import { Category } from "@/app/Components/Category/Category";
-import { SearchByCriteria } from "@/app/Components/SearchByCriteria/SearchByCriteria";
-import { useEffect, useState } from "react";
-type data  = {
-    _id: number ; 
-    name:string ; 
-    image:string ; 
-    description:string ; 
-    rating:number ; 
-    price:number ; 
-    countInStock:number ; 
-    discount:number; 
-    ram?:string ; 
-    screen_size?:string ; 
-    processor?:string ; 
-    gpu_brand?:string ; 
-    drive_size?:string ; 
-    brand:number ; 
-    category:number ; 
+import { Products } from '@/app/Components/Products/Products';
+import {useState} from 'react';
+import { useEffect } from 'react';
+import { generalApi } from '../../../../../lib/api';
+
+type data = {
+    id: number;
+    name: string;
+    quantity: string;
+    description: string;
+    color: string;
+    price: number;
+    discount:  number ; 
+    RAM: string;
+    screen?: string;
+    gpu?:    string;
+    cpu?:    string;
+    driver_size?: string;
+    count_camera?: string;
+    resolution?:     string;
+    sensor?:     string;
+    capacity_battery?: string;
+    operating_system?: string;
+    connectivity?: string;
+    audio_technical?: string;
+    style?: string;
+    time_battery?: string;
+    delay?: string;
+    support_stylus?: false,
+    brand: string;
+    categories : string ; 
+    images : imageType[] ; 
 }
-export default function GamingPage() {
-    const [product,setproduct] = useState<data[]>([]) ; 
-            useEffect(()=>{
-                const data_product = async () =>{
-                     // Lấy 7 trang (2,3,4,5,6,7,8) = 56 sản phẩm
-                const data = await fetch(`https://ecommerce-django-production-6256.up.railway.app/api/products/categories/gaming`)
-                const json = await data.json();
-        setproduct(Array.isArray(json.products) ? json.products : []);
-                    
-                    
-                }
-                data_product() ; 
-            },[])
-        return (
-            <>
-            
-                <Category/>
-                <SearchByCriteria data_products={{ products: product as data[] }}/>
-                
-            </>
-        )
+type imageType = {
+    id: number;
+    image: string ; 
 }
+
+export default  function GamingPage() {
+    const [product, setproduct] = useState<data[]>([]); 
+    useEffect(() => {
+  const data_product = async () => {
+    const data = await fetch(`${generalApi}getProducts/categories/gaming`,{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        // body: JSON.stringify({ name: 'gaming' }) // Assuming you want to filter by audio category
+    } );
+    const json = await data.json();
+    setproduct(Array.isArray(json) ? json : []);// <-- lấy mảng sản phẩm
+  };
+  data_product();
+}, []);
+    
+    return (
+        <>
+             <Products data_products={{ products: product as data[] }} />
+        </>
+    )
+} 

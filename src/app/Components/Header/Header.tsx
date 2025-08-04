@@ -16,34 +16,65 @@ import { CiShoppingCart } from "react-icons/ci";
 import { AiOutlineDollarCircle } from "react-icons/ai";
 import { SlLogout } from "react-icons/sl";
 import { LoadingPage } from "../notification/loading";
+import { generalApi, userApi } from "../../../../lib/api";
 
 type UserProfile = {
-    username?: string;
+    name : string;
+    role : string;
+    email : string;
+    id : number;
     // add other properties if needed
 };
-type data  = {
-    _id: number ; 
-    name:string ; 
-    image:string ; 
-    description:string ; 
-    rating:number ; 
-    price:number ; 
-    countInStock:number ; 
-    discount:number; 
-    ram?:string ; 
-    screen_size?:string ; 
-    processor?:string ; 
-    gpu_brand?:string ; 
-    drive_size?:string ; 
-    brand:number ; 
-    category:number ; 
+type CartItem = 
+    {
+        id : number ; 
+        quantity : number ;
+        product: data ; 
+    }
+type data = {
+    id: number;
+    name: string;
+    quantity: string;
+    description: string;
+    color: string;
+    price: number;
+    discount:  number ; 
+    RAM: string;
+    screen?: string;
+    gpu?:    string;
+    cpu?:    string;
+    driver_size?: string;
+    count_camera?: string;
+    resolution?:     string;
+    sensor?:     string;
+    capacity_battery?: string;
+    operating_system?: string;
+    connectivity?: string;
+    audio_technical?: string;
+    style?: string;
+    time_battery?: string;
+    delay?: string;
+    support_stylus?: false,
+    brand: string;
+    categories : string ; 
+    images : imageType[] ; 
 }
+type imageType = {
+    id: number;
+    image: string ; 
+}
+
 
 export const Header = () => {
     const [search, setSearch] = useState(false);
     const [loading, setloading] = useState(false);
     const [islogin,setlogin]=useState(false) ; 
-    const [data,setdata] = useState<UserProfile>({});
+    const [data,setdata] = useState<UserProfile>({
+        name: "",
+        role: "",
+        email: "",
+        id: 0,
+    });
     const [count_cart,setCount] = useState(0) ; 
     const pathname = usePathname() ; 
     const router = useRouter() ; 
@@ -54,14 +85,14 @@ export const Header = () => {
     const [newProduct,setNewProduct] = useState<data[]>([]) ; // State to hold filtered products
     useEffect(()=>{
         const fetchData = async () =>{
-            const res = await fetch("https://ecommerce-django-production-6256.up.railway.app/api/products/",{
+            const res = await fetch(`${generalApi}getProducts`,{
                 method:"GET",
                 headers:{
                     "Content-Type":"application/json",
                 }
             }) ;
             const json = await res.json() ; 
-            setproduct(Array.isArray(json.products) ? json.products : []);
+            setproduct(Array.isArray(json) ? json : []);
         }
         fetchData() ;
         
@@ -79,8 +110,8 @@ export const Header = () => {
             setlogin(true) ;
             const information = async () =>
             {
-                const respose = await fetch("https://ecommerce-django-production-6256.up.railway.app/api/users/profile", {
-                    method: "POST" , 
+                const respose = await fetch(`${userApi}getProfile`, {
+                    method: "GET" , 
                     headers: {
                         "Content-Type": "application/json",
                         'Authorization':`Bearer ${token}` , 
@@ -99,14 +130,14 @@ export const Header = () => {
         {
             const handleCartUpdate =() =>{
                 const cart = async() =>{
-                const res = await fetch("https://ecommerce-django-production-6256.up.railway.app/api/orders/cart/",{
+                const res = await fetch(`${userApi}getBasket`,{
                     method: "GET",
                     headers: {
                         "Content-Type" : "application/json",
                         'Authorization':`Bearer ${token}` ,
                     }
                 })
-                const data_cart = await res.json() ;
+                const data_cart = await res.json() as CartItem[] ;
                 if(data_cart) setCount(data_cart.length) ; 
             }
             cart()  ; 
@@ -162,41 +193,10 @@ export const Header = () => {
             }
         }
      }
-     const handleClickTranferPageDetail = useCallback((id:number , category:number) => {
+     const handleClickTranferPageDetail = useCallback((id:number , category:string) => {
         let url:string  ;
         
-        if(category===3) 
-        {
-            url = `/products/mobilePhones/${id}` ;
-        }
-        else if(category===1)
-        {
-            url = `/products/laptopAndComputer/${id}` ;
-        }
-        else if(category===4)
-        {
-            url = `/products/tablets/${id}` ;
-        }
-        else if(category===6)
-        {
-            url = `/products/audio/${id}` ;
-        }
-        else if(category ===7)
-        {
-            url = `/products/cameras/${id}` ;
-        }
-        else if(category===5)
-        {
-            url = `/products/wearables/${id}` ;
-        }
-        else if(category===2)
-        {
-            url = `/products/gaming/${id}` ;
-        }
-        else if(category===8)
-        {
-            url = `/products/networking/${id}` ;
-        }
+        url = `/products/${category}/${id}` ;
         
         setTimeout(() => {
             if(pathname !== url)
@@ -330,7 +330,7 @@ export const Header = () => {
                                                     }, 1000);
                                                 }}>
                                                     <div className="icon"><FaRegCircleUser className="w-[24px] h-[24px] text-[#0C0C0C]"/></div>
-                                                    <div className="information text-[18px] text-[#0C0C0C] font-[300] hover:text-[#0C68F4]">{data.username}</div>
+                                                    <div className="information text-[18px] text-[#0C0C0C] font-[300] hover:text-[#0C68F4]">{data.name}</div>
                                                 </li>
                                                 <li  className="flex gap-[16px]  hover:bg-blue-50  transition-colors cursor-pointer p-[5px]" onClick={()=>{
                                                     setloading(true) ; 
@@ -415,11 +415,11 @@ export const Header = () => {
                                             {newProduct.length > 0 ? (
                                                 <ul className="space-y-4">
                                                     {newProduct.map((item) => (
-                                                        <li key={item._id} className="flex items-center gap-4 p-4 border-b border-gray-200 hover:bg-gray-50 transition-colors" onClick={() => {
+                                                        <li key={item.id} className="flex items-center gap-4 p-4 border-b border-gray-200 hover:bg-gray-50 transition-colors" onClick={() => {
                                                             handleSearchTogle();
-                                                            handleClickTranferPageDetail(item._id, item.category);
+                                                            handleClickTranferPageDetail(item.id, item.categories);
                                                         }}>
-                                                            <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-md" />
+                                                            <img src={item.images[0].image} alt={item.name} className="w-16 h-16 object-cover rounded-md" />
                                                             <div className="flex justify-between w-100% w-[800px]">
                                                                 <h4 className="text-lg font-semibold text-gray-800">{item.name}</h4>
                                                                 <span className="text-blue-600 font-bold">${item.price}</span>

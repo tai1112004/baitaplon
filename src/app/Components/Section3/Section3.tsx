@@ -3,23 +3,39 @@ import { useEffect, useState } from "react";
 import { ChevronRight, ShoppingCart, Heart, Eye, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { LoadingPage } from "../notification/loading";
+import { generalApi } from "../../../../lib/api";
 
 type data = {
-    _id: number;
+    id: number;
     name: string;
-    image: string;
+    quantity: string;
     description: string;
-    rating: number;
+    color: string;
     price: number;
-    countInStock: number;
-    discount: number;
-    ram?: string;
-    screen_size?: string;
-    processor?: string;
-    gpu_brand?: string;
-    drive_size?: string;
-    brand: number;
-    category: number;
+    discount:  number ; 
+    RAM: string;
+    screen?: string;
+    gpu?:    string;
+    cpu?:    string;
+    driver_size?: string;
+    count_camera?: string;
+    resolution?:     string;
+    sensor?:     string;
+    capacity_battery?: string;
+    operating_system?: string;
+    connectivity?: string;
+    audio_technical?: string;
+    style?: string;
+    time_battery?: string;
+    delay?: string;
+    support_stylus?: false,
+    brand: string;
+    categories : string ; 
+    images : imageType[] ; 
+}
+type imageType = {
+    id: number;
+    image: string ; 
 }
 
 export const Section3 = () => {
@@ -34,15 +50,22 @@ export const Section3 = () => {
         const getdata = async () => {
                 
                 
-                const res = await fetch("https://ecommerce-django-production-6256.up.railway.app/api/products/discount");
+                const res = await fetch(`${generalApi}getDiscount`);
                 const json = await res.json();
-                setSanpham(Array.isArray(json.products) ? json.products : []);
+                setSanpham(Array.isArray(json) ? json : []);
                 // Kiểm tra dữ liệu trả về
                 
         };
 
         getdata();
+        console.log(" tao dang ow day"+sanpham);
     }, []);
+     const formatCurrency = (amount : number) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(amount);
+  };
 
     // Auto-play carousel chỉ khi có sản phẩm
     useEffect(() => {
@@ -70,37 +93,10 @@ export const Section3 = () => {
     //     setIsAutoPlaying(false);
     // };
 
-    const handleTranferPage = (id: number, category: number) => {
+    const handleTranferPage = (id: number, category: string) => {
         let url: string;
         
-        switch (category) {
-            case 3:
-                url = `/products/mobilePhones/${id}`;
-                break;
-            case 4:
-                url = `/products/laptopAndComputer/${id}`;
-                break;
-            case 5:
-                url = `/products/tablets/${id}`;
-                break;
-            case 6:
-                url = `/products/audio/${id}`;
-                break;
-            case 7:
-                url = `/products/cameras/${id}`;
-                break;
-            case 9:
-                url = `/products/wearables/${id}`;
-                break;
-            case 10:
-                url = `/products/gaming/${id}`;
-                break;
-            case 11:
-                url = `/products/networking/${id}`;
-                break;
-            default:
-                url = `/products/${id}`;
-        }
+        url = `/products/${category}/${id}`;
         
         setLoading(true);
         setTimeout(() => {
@@ -181,9 +177,9 @@ export const Section3 = () => {
                                         >
                                             {sanpham.map((item: data, index: number) => (
                                                 <div 
-                                                    key={`${item._id}-${index}`}
+                                                    key={`${item.id}-${index}`}
                                                     className="flex-shrink-0 w-70 group cursor-pointer"
-                                                    onClick={() => handleTranferPage(item._id, item.category)}
+                                                    onClick={() => handleTranferPage(item.id, item.categories)}
                                                 >
                                                     <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 h-full shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-500 border border-white/20 relative overflow-hidden">
                                                         {/* Discount Badge */}
@@ -225,7 +221,7 @@ export const Section3 = () => {
                                                         <div className="relative mb-4 mt-2">
                                                             <div className="w-full h-48 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl overflow-hidden">
                                                                 <img 
-                                                                    src={item.image} 
+                                                                    src={item.images.length > 0 ? item.images[0].image : '/placeholder-image.png'} 
                                                                     alt={item.name}
                                                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                                                     onError={(e) => {
@@ -248,22 +244,22 @@ export const Section3 = () => {
                                                                     {[...Array(5)].map((_, i) => (
                                                                         <Star 
                                                                             key={i} 
-                                                                            className={`w-3 h-3 ${i < Math.floor(item.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
+                                                                            className={`w-3 h-3 ${i < Math.floor(5) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
                                                                         />
                                                                     ))}
                                                                 </div>
-                                                                <span className="text-xs text-gray-500">({item.rating})</span>
+                                                                <span className="text-xs text-gray-500">({5})</span>
                                                             </div>
 
                                                             {/* Price */}
                                                             <div className="flex items-center justify-between">
                                                                 <div className="flex items-center gap-2">
                                                                     <span className="text-lg font-bold text-gray-900">
-                                                                        ${(item.price - (item.price * item.discount / 100))}
+                                                                        ${formatCurrency((item.price - (item.price * item.discount / 100)))}
                                                                     </span>
                                                                     {item.discount > 0 && (
                                                                         <span className="text-sm text-gray-500 line-through">
-                                                                            ${item.price}
+                                                                            ${formatCurrency(item.price)}
                                                                         </span>
                                                                     )}
                                                                 </div>

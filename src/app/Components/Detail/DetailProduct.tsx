@@ -14,76 +14,107 @@ import { getCookie } from "@/app/function/GetCookie/GetCookie";
 import { WrongPage } from "../notification/wrong";
 import { AddCartPage } from "../notification/addCart";
 import { LoadingPage } from "../notification/loading";
+import { generalApi, userApi } from "../../../../lib/api";
 
 type props = {
     category : string ; 
 };
 type dataCommnents=
 {
-    name: string ;
-    image : string ; 
+    id: number ;
+    user : string ; 
     rating: number ; 
     content:string ; 
     date: string  ; 
 } ;
-// type data = {
-//     _id: number;
-//     name: string;
-//     image: string;
-//     price: number;
-//     discount: number;
-//     brand: string; // Changed from number to string
-//     screen_size: string;
-//     drive_size: string;
-//     processor: string;
-//     ram: string;
-//     gpu_brand: string;
-//     description: string;
-//     rating: number;
-//     countInStock: number;
-//     category: string;
-// };
-type data  = {
-    _id: number ; 
-    name:string ; 
-    image:string ; 
-    description:string ; 
-    rating:number ; 
-    price:number ; 
-    countInStock:number ; 
-    discount:number; 
-    ram?:string ; 
-    screen_size?:string ; 
-    processor?:string ; 
-    gpu_brand?:string ; 
-    drive_size?:string ; 
-    brand:number ; 
-    category:number ; 
+
+type data = {
+    id: number;
+    name: string;
+    quantity: string;
+    description: string;
+    color: string;
+    price: number;
+    discount:  number ; 
+    RAM: string;
+    screen?: string;
+    gpu?:    string;
+    cpu?:    string;
+    driver_size?: string;
+    count_camera?: string;
+    resolution?:     string;
+    sensor?:     string;
+    capacity_battery?: string;
+    operating_system?: string;
+    connectivity?: string;
+    audio_technical?: string;
+    style?: string;
+    time_battery?: string;
+    delay?: string;
+    support_stylus?: false,
+    brand: string;
+    categories : string ; 
+    images : imageType[] ; 
+    renewList: dataCommnents[]  ;  
+}
+// type renewType = {
+//     id: number ;
+//     user: string ;
+//     content: string ;
+//     date: string ;
+//     rating: number ;
+// }
+type imageType = {
+    id: number;
+    image: string ; 
+}
+type inforUser = {
+    id: number ;
+    name : string;  
 }
 export const DetailComputer = ({category}:props) =>{
+    console.log(category)
     const router = useRouter() ; 
     const params= useParams<{id:string}>(); 
     const id = parseInt(params.id)  ;
     const asPathname = usePathname();
     
     const [data_itemProduct, setdata] = useState<data>({
-  _id: 0,
-  name: "",
-  image: "",
-  description: "",
-  rating: 0,
-  price: 0,
-  countInStock: 0,
-  discount: 0,
-  ram: "",
-  screen_size: "",
-  processor: "",
-  gpu_brand: "",
-  drive_size: "",
-  brand: 0,
-  category: 0,
+        id: 0,
+        name: "",
+        quantity: "",
+        description: "",
+        color: "",
+        price: 0,
+        discount: 0,
+        RAM: "",
+        screen: "",
+        gpu: "",
+        cpu: "",
+        driver_size: "",
+        count_camera: "",
+        resolution: "",
+        sensor: "",
+        capacity_battery: "",
+        operating_system: "",
+        connectivity: "",
+        audio_technical: "",
+        style: "",
+        time_battery: "",
+        delay: "",
+        support_stylus: false,
+        brand: "",
+        categories: "",
+        images: [],
+        renewList:[]
 });
-    const [product,setproduct] = useState([]) ; 
+    const [user , setuser]  = useState<inforUser>({
+        id: 0 ,
+        name: "",
+        
+    })
+    const [product,setproduct] = useState<data[]>([]) ; 
+    const [check, setCheck] = useState<dataCommnents[]>([]) ; 
     const [wrong, setwrong] = useState(false) ; 
     const [loading, setloading] = useState(false) ;
     const [addcart , setAddCart] = useState(false) ; 
@@ -93,21 +124,35 @@ export const DetailComputer = ({category}:props) =>{
     const [priceTrue, setPriceTrue] = useState(0);
     const [userRating, setUserRating] = useState(0);
     const [hoveredRating, setHoveredRating] = useState(0);
+    const [selectedImageIndex, setSelectedImageIndex] = useState(0); // New state for selected image
     const token = getCookie("token") ;  
-    
-    const data_wrong = {
+     const formatCurrency = (amount : number) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(amount);
+  };
+    const [data_wrong,setdata_wrong] = useState({
         title : "Bạn chưa đăng nhập !!!"
-    }
+    })
     const data_addcart = {
         title: "Sản phẩm đã được thêm vào giỏ hàng !!!"
     }
 
+
     useEffect(()=>{
         const data_product = async () =>{
             // Lấy 7 trang (2,3,4,5,6,7,8) = 56 sản phẩm
-            const data = await fetch(`https://ecommerce-django-production-6256.up.railway.app/api/products/categories/${category}`)
+            const data = await fetch(`${generalApi}getProducts/Categories/${category}`,{
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                // body: JSON.stringify({ name: category }) // Assuming you want to filter by category
+                }
+            )
             const json = await data.json();
-            setproduct(Array.isArray(json.products) ? json.products : []);
+            setproduct(Array.isArray(json) ? json: []);
         }
         data_product() ; 
     },[])
@@ -115,17 +160,29 @@ export const DetailComputer = ({category}:props) =>{
     useEffect(()=>{
         const fetchData = async () =>
         {
-            const res = await fetch(`https://ecommerce-django-production-6256.up.railway.app/api/products/${id}`,{
+            const res = await fetch(`${generalApi}getProducts/${id}`,{
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 }
             })
-            setdata(await res.json()) ; 
+            const data = await res.json() as data;
+            setdata(data) ; 
             
+            setCheck(data.renewList as dataCommnents[])
+
         }
         fetchData();
+        // if(data_itemProduct.renewList.length>0) 
+        //     {
+        //         setCheck(data_itemProduct.renewList)
+        //     }
+        //     else console.log("co cai dau buoi")
+        // console.log("tao dang o day " + data_itemProduct) ;
     },[token])
+    // useEffect(()=>{
+    //     setCheck(data_itemProduct.renewList)
+    // },[])
     useEffect(()=>{
         if (
             data_itemProduct &&
@@ -139,12 +196,7 @@ export const DetailComputer = ({category}:props) =>{
     useEffect(() => {
         // setSearchState(asPathname); // Removed undefined function
     },[asPathname]);
-    // useEffect(()=>{
-    //     if(data_itemProduct)
-    //     {
-    //         ;
-    //     }
-    // },[])
+
     useEffect(()=>{
         if (data_itemProduct) {
             const price = data_itemProduct.price ?? 0;
@@ -152,12 +204,55 @@ export const DetailComputer = ({category}:props) =>{
             setPrice((price - price * (discount / 100)) * quantity);
             setPriceTrue(price * quantity);
         }
-            
-        
     },[quantity])
+    useEffect(()=>{
+        const fetchDataUser = async () =>
+        {
+            const res = await fetch(`${userApi}getProfile`,{
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                    }
+
+                })
+                setuser(await res.json()) ;
+        }
+        fetchDataUser();
+    },[])
+    // Helper function to filter out empty/null/undefined specifications
+    const getValidSpecs = () => {
+        const specs = [
+            { label: "Thương hiệu", value: data_itemProduct.brand },
+            { label: "Model", value: data_itemProduct.name },
+            { label: "Kích thước màn hình", value: data_itemProduct.screen },
+            { label: "Ổ cứng", value: data_itemProduct.driver_size },
+            { label: "CPU", value: data_itemProduct.cpu },
+            { label: "RAM", value: data_itemProduct.RAM },
+            { label: "GPU", value: data_itemProduct.gpu },
+            { label: "Camera sau", value: data_itemProduct.count_camera },
+            { label: "Độ phân giải", value: data_itemProduct.resolution },
+            { label: "Cảm biến", value: data_itemProduct.sensor },
+            { label: "Dung lượng pin", value: data_itemProduct.capacity_battery },
+            { label: "Hệ điều hành", value: data_itemProduct.operating_system },
+            { label: "Kết nối", value: data_itemProduct.connectivity },
+            { label: "Kỹ thuật âm thanh", value: data_itemProduct.audio_technical },
+            { label: "Kiểu dáng", value: data_itemProduct.style },
+            { label: "Thời gian sử dụng pin", value: data_itemProduct.time_battery },
+            { label: "Độ trễ", value: data_itemProduct.delay },
+        ];
+        
+        return specs.filter(spec => 
+            spec.value && 
+            spec.value.toString().trim() !== "" && 
+            spec.value !== null && 
+            spec.value !== undefined
+        );
+    };
+    
     const arrayurl = asPathname.split("/"); 
   
-    const [check, setCheck] = useState<dataCommnents[]>([]) ; 
+    
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) =>
     {
@@ -166,15 +261,64 @@ export const DetailComputer = ({category}:props) =>{
         console.log(contents) ;
         if(contents!= null && userRating > 0)
         {
-            const newComment = {
-                id: Math.floor(Math.random() * 1000),
-                "name": "Hoang Tai",
-                "image": "https://scontent.fhan20-1.fna.fbcdn.net/v/t39.30808-1/474213593_1654634585477210_6135141105138811194_n.jpg?stp=c0.30.500.500a_dst-jpg_s200x200_tt6&_nc_cat=109&ccb=1-7&_nc_sid=1d2534&_nc_eui2=AeHmpvqvGu7sLnSwrDp3yzywgN7ByMDJtsOA3sHIwMm2w5qNaq2CO7UpB4VgII4nTdDIvZWfevN5ZIZnN7i9Nm3H&_nc_ohc=Qa1TanZSCt4Q7kNvwHS7V4s&_nc_oc=AdltgWRhrZRuBSe8byGgbO0gQRevE6JxnOTm6c2HqVbnHnqrTaihxMNMIRSBW91edDQ&_nc_zt=24&_nc_ht=scontent.fhan20-1.fna&_nc_gid=YuunvZTHQrkZlkTgHurO8g&oh=00_AfPv_Sh-MzSp-ai9x_uro9PWlmTEUBQExHVcaXL23Q9PgQ&oe=6854C026",
-                "content": contents,
-                "rating": userRating,
-                "date": new Date().toLocaleDateString('vi-VN')
+            const newComment:dataCommnents = {
+                id : user.id , 
+                user : user.name,
+                rating: userRating ,
+                content: contents ,
+                date:  (new Date()).toISOString(),
+
+
             }
-            setCheck([...check,newComment]) ;
+            const addRenew = async()=>{
+                
+                    const response = await fetch(`${userApi}addRenew/${id}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify(newComment)
+                            });
+                            const data = await response.json();
+                            if(response.status==200)
+                            {
+                                
+                                setCheck([...check, data]);
+                            }
+                            if(response.status==500)
+                            {
+                                setdata_wrong({
+                                    title: "Bạn chưa đăng nhập !!!" 
+                                })
+                                setwrong(true) ; 
+                                setTimeout(() => {
+                                    setwrong(false) ;
+                                     
+                                }, 1600);
+                            }
+                            if(response.status==400) {
+                                
+                                setdata_wrong({
+                                    title: "Bạn chưa mua hàng hoặc bạn bình luận rồi!!!" 
+                                })
+                                setwrong(true) ; 
+                                setTimeout(() => {
+                                    setwrong(false) ;
+                                    setdata_wrong({
+                                    title: "Bạn chưa đăng nhập !!!" 
+                                })
+                                     
+                                }, 1600);
+                            }
+                            
+                            
+
+            
+            
+                }
+                addRenew();
+            
             (e.target as HTMLFormElement).comments.value = null ;
             setUserRating(0);
             setHoveredRating(0);
@@ -209,7 +353,7 @@ export const DetailComputer = ({category}:props) =>{
         else 
         {
             const add_cart = async() =>{
-                await fetch(`https://ecommerce-django-production-6256.up.railway.app/api/orders/addtocart/${id}/`,{
+                await fetch(`${userApi}addBasket/${id}`,{
                     method: 'POST',
                     headers: {
                         "Content-Type": "application/json",
@@ -270,16 +414,40 @@ export const DetailComputer = ({category}:props) =>{
 
             {/* Main Product Section */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-                {/* Product Images */}
+                {/* Product Images - Enhanced */}
                 <div className="lg:col-span-1">
                     <div className="sticky top-4">
+                        {/* Main Image */}
                         <div className="aspect-square bg-white rounded-xl shadow-lg overflow-hidden mb-4 group">
                             <img 
-                                src={data_itemProduct.image} 
+                                src={data_itemProduct.images[selectedImageIndex]?.image || data_itemProduct.images[0]?.image} 
                                 alt={data_itemProduct.name}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                             />
                         </div>
+                        
+                        {/* Thumbnail Images */}
+                        {data_itemProduct.images && data_itemProduct.images.length > 1 && (
+                            <div className="grid grid-cols-4 gap-2">
+                                {data_itemProduct.images.map((image, index) => (
+                                    <button
+                                        key={image.id}
+                                        onClick={() => setSelectedImageIndex(index)}
+                                        className={`aspect-square bg-white rounded-lg shadow-md overflow-hidden border-2 transition-all duration-200 hover:shadow-lg ${
+                                            selectedImageIndex === index 
+                                                ? 'border-blue-500 ring-2 ring-blue-200' 
+                                                : 'border-gray-200 hover:border-gray-300'
+                                        }`}
+                                    >
+                                        <img 
+                                            src={image.image} 
+                                            alt={`${data_itemProduct.name} - Ảnh ${index + 1}`}
+                                            className="w-full h-full object-cover hover:scale-110 transition-transform duration-200"
+                                        />
+                                    </button>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -292,9 +460,9 @@ export const DetailComputer = ({category}:props) =>{
                         
                         <div className="flex items-center gap-4 mb-4">
                             <div className="flex items-center gap-1">
-                                {renderStars(data_itemProduct.rating || 4.5)}
+                                {renderStars(4.5)}
                                 <span className="ml-2 text-sm text-gray-600">
-                                    ({data_itemProduct.rating || 4.5})
+                                    ({1 || 4.5})
                                 </span>
                             </div>
                             <span className="text-sm text-gray-500">• 125 đã bán</span>
@@ -316,25 +484,15 @@ export const DetailComputer = ({category}:props) =>{
                         </div>
                     </div>
 
-                    {/* Specifications Table */}
+                    {/* Specifications Table - Only show non-empty specs */}
                     <div className="bg-gray-50 rounded-xl p-6">
                         <h3 className="text-lg font-semibold text-gray-900 mb-4">Thông số kỹ thuật</h3>
                         <div className="space-y-3">
-                            {[
-                                { label: "Thương hiệu", value: data_itemProduct.brand },
-                                { label: "Model", value: data_itemProduct.name },
-                                { label: "Kích thước màn hình", value: data_itemProduct.screen_size },
-                                { label: "Ổ cứng", value: data_itemProduct.drive_size },
-                                { label: "CPU", value: data_itemProduct.processor },
-                                { label: "RAM", value: data_itemProduct.ram },
-                                { label: "GPU", value: data_itemProduct.gpu_brand }
-                            ].map((spec, index) => (
-                                spec.value && (
-                                    <div key={index} className="flex justify-between py-2 border-b border-gray-200 last:border-0">
-                                        <span className="text-gray-600 font-medium">{spec.label}:</span>
-                                        <span className="text-gray-900 font-semibold">{spec.value}</span>
-                                    </div>
-                                )
+                            {getValidSpecs().map((spec, index) => (
+                                <div key={index} className="flex justify-between py-2 border-b border-gray-200 last:border-0">
+                                    <span className="text-gray-600 font-medium">{spec.label}:</span>
+                                    <span className="text-gray-900 font-semibold">{spec.value}</span>
+                                </div>
                             ))}
                         </div>
                     </div>
@@ -347,10 +505,10 @@ export const DetailComputer = ({category}:props) =>{
                             <div className="flex items-baseline gap-2">
                                 <div className="flex flex-col">
                                     <span className="text-3xl font-bold text-red-600">
-                                    {price}$
+                                    {formatCurrency(price)}
                                     
                                 </span>
-                                <s className="text-2xl font-bold text-gray-300">{priceTrue}$</s>
+                                <s className="text-2xl font-bold text-gray-300">{formatCurrency(priceTrue)}</s>
                                 </div>
                                 
                                 {data_itemProduct.discount && (
@@ -464,27 +622,17 @@ export const DetailComputer = ({category}:props) =>{
                 </div>
             </div>
 
-            {/* Detailed Specifications */}
+            {/* Detailed Specifications - Only show non-empty specs */}
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6 border-b border-gray-200 pb-4">
                     Thông tin chi tiết
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {[
-                        { label: "Thương hiệu", value: data_itemProduct.brand },
-                        { label: "Tên model", value: data_itemProduct.name },
-                        { label: "Kích thước màn hình", value: data_itemProduct.screen_size },
-                        { label: "Dung lượng ổ cứng", value: data_itemProduct.drive_size },
-                        { label: "Bộ xử lý", value: data_itemProduct.processor },
-                        { label: "RAM", value: data_itemProduct.ram },
-                        { label: "Card đồ họa", value: data_itemProduct.gpu_brand }
-                    ].map((spec, index) => (
-                        spec.value && (
-                            <div key={index} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-                                <span className="font-medium text-gray-700">{spec.label}:</span>
-                                <span className="font-semibold text-gray-900">{spec.value}</span>
-                            </div>
-                        )
+                    {getValidSpecs().map((spec, index) => (
+                        <div key={index} className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
+                            <span className="font-medium text-gray-700">{spec.label}:</span>
+                            <span className="font-semibold text-gray-900">{spec.value}</span>
+                        </div>
                     ))}
                 </div>
             </div>
@@ -579,14 +727,9 @@ export const DetailComputer = ({category}:props) =>{
                                 check.map((item: dataCommnents, index: number) => (
                                     <div key={index} className="bg-gray-50 rounded-xl p-6 border border-gray-100">
                                         <div className="flex items-start gap-4">
-                                            <img 
-                                                src={item.image} 
-                                                alt={item.name}
-                                                className="w-12 h-12 rounded-full object-cover"
-                                            />
                                             <div className="flex-1">
                                                 <div className="flex items-center justify-between mb-2">
-                                                    <h4 className="font-semibold text-gray-900">{item.name}</h4>
+                                                    <h4 className="font-semibold text-gray-900">{item.user}</h4>
                                                     <div className="flex">
                                                         {[1,2,3,4,5].map((star:number) => {
                                                             if(star <= item.rating) return (<FaStar key={star} className="w-4 h-4 text-yellow-400" />)

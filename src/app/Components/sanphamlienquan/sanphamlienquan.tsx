@@ -4,22 +4,37 @@ import { ChevronRight, ChevronLeft, ShoppingCart, Heart, Eye, Star } from "lucid
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { LoadingPage } from "../notification/loading";
-type data  = {
-    _id: number ; 
-    name:string ; 
-    image:string ; 
-    description:string ; 
-    rating:number ; 
-    price:number ; 
-    countInStock:number ; 
-    discount:number; 
-    ram?:string ; 
-    screen_size?:string ; 
-    processor?:string ; 
-    gpu_brand?:string ; 
-    drive_size?:string ; 
-    brand:number ; 
-    category:number ; 
+type data = {
+    id: number;
+    name: string;
+    quantity: string;
+    description: string;
+    color: string;
+    price: number;
+    discount:  number ; 
+    RAM: string;
+    screen?: string;
+    gpu?:    string;
+    cpu?:    string;
+    driver_size?: string;
+    count_camera?: string;
+    resolution?:     string;
+    sensor?:     string;
+    capacity_battery?: string;
+    operating_system?: string;
+    connectivity?: string;
+    audio_technical?: string;
+    style?: string;
+    time_battery?: string;
+    delay?: string;
+    support_stylus?: false,
+    brand: string;
+    categories : string ; 
+    images : imageType[] ; 
+}
+type imageType = {
+    id: number;
+    image: string ; 
 }
 type props = {
     data_products: { products: data[] };
@@ -59,40 +74,9 @@ export const Sanphamlienquan = ({data_products}:props) => {
                 setsanpham([]);
             }
         }, [product, data_products]);
-        const handleTranferPage = (id:number , category:number) =>{
+        const handleTranferPage = (id:number , category:string) =>{
         let url:string  ;
-        if(category===3) 
-        {
-            url = `/products/mobilePhones/${id}` ;
-        }
-        else if(category===4)
-        {
-            url = `/products/laptopAndComputer/${id}` ;
-        }
-        else if(category===5)
-        {
-            url = `/products/tablets/${id}` ;
-        }
-        else if(category===6)
-        {
-            url = `/products/audio/${id}` ;
-        }
-        else if(category ===7)
-        {
-            url = `/products/cameras/${id}` ;
-        }
-        else if(category===9)
-        {
-            url = `/products/wearables/${id}` ;
-        }
-        else if(category===10)
-        {
-            url = `/products/gaming/${id}` ;
-        }
-        else if(category===11)
-        {
-            url = `/products/networking/${id}` ;
-        }
+        url = `/products/${category}/${id}` ;
         setloading(true) ; 
         setTimeout(() => {
             router.push(url) ; 
@@ -107,6 +91,12 @@ export const Sanphamlienquan = ({data_products}:props) => {
                 router.push(`/products/${URL_arr[2]}`)
             },2000)
         }
+           const formatCurrency = (amount : number) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    }).format(amount);
+  };
     return (
         <>
         {loading&&<LoadingPage/>}
@@ -162,7 +152,7 @@ export const Sanphamlienquan = ({data_products}:props) => {
                                         key={index}
                                         className="flex-shrink-0 w-70 group cursor-pointer"
                                         onClick={() =>
-                                            handleTranferPage(item._id,item.category)}
+                                            handleTranferPage(item.id,item.categories)}
                                     >
                                         <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 h-full shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-500 border border-white/20 relative overflow-hidden">
                                             {/* Discount Badge */}
@@ -194,7 +184,7 @@ export const Sanphamlienquan = ({data_products}:props) => {
                                             <div className="relative mb-4 mt-2">
                                                 <div className="w-full h-48 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl overflow-hidden">
                                                     <img 
-                                                        src={item.image} 
+                                                        src={item.images[0].image} 
                                                         alt={item.name}
                                                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                                     />
@@ -213,7 +203,7 @@ export const Sanphamlienquan = ({data_products}:props) => {
                                                         {[...Array(5)].map((_, i) => (
                                                             <Star 
                                                                 key={i} 
-                                                                className={`w-3 h-3 ${i < Math.floor(item.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
+                                                                className={`w-3 h-3 ${i < Math.floor(3) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
                                                             />
                                                         ))}
                                                     </div>
@@ -223,8 +213,8 @@ export const Sanphamlienquan = ({data_products}:props) => {
                                                 {/* Price */}
                                                 <div className="flex items-center justify-between">
                                                     <div className="flex items-center gap-2">
-                                                        <span className="text-lg font-bold text-gray-900">{item.price - item.price*item.discount/100}</span>
-                                                        <span className="text-sm text-gray-500 line-through">{item.price}</span>
+                                                        <span className="text-lg font-bold text-gray-900">{formatCurrency(item.price - item.price*item.discount/100)}</span>
+                                                        <span className="text-sm text-gray-500 line-through">{formatCurrency(item.price)}</span>
                                                     </div>
                                                 <button 
                                                     className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg flex items-center justify-center hover:from-blue-600 hover:to-blue-700 transform hover:scale-110 transition-all duration-300 shadow-md"

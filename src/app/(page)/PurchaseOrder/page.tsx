@@ -3,24 +3,53 @@ import DescriptionAlerts from "@/app/Components/Alert/Alert_Purhase/Alert_purcha
 import { getCookie } from "@/app/function/GetCookie/GetCookie";
 import {  useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-type OrderItem = {
-    image: string;
+import { userApi } from "../../../../lib/api";
+type basketItem = {
+    id: number;
+    quantity: number;
+    product: product; 
+}
+type product = {
+    id: number;
     name: string;
+    quantity: number;
+    description: string;
+    color: string;
     price: number;
-    discount: number;
-    qty: number;
-    // add other properties if needed
-};
-
+    discount:  number ; 
+    RAM: string;
+    screen?: string;
+    gpu?:    string;
+    cpu?:    string;
+    driver_size?: string;
+    count_camera?: string;
+    resolution?:     string;
+    sensor?:     string;
+    capacity_battery?: string;
+    operating_system?: string;
+    connectivity?: string;
+    audio_technical?: string;
+    style?: string;
+    time_battery?: string;
+    delay?: string;
+    support_stylus?: false,
+    brand: string;
+    categories : string ; 
+    images : imageType[] ; 
+}
+type imageType = {
+    id: number;
+    image: string ; 
+}
 export default function PurchaseOrder() { 
-        const [dataOrder, setdata] = useState<OrderItem[]>([]) ; 
+        const [dataOrder, setdata] = useState<basketItem[]>([]) ; 
         const token = getCookie("token") ; 
         useEffect(()=>{
             if(token)
             {
                 const fetchData = async () =>
                 {
-                    const res = await fetch(`https://ecommerce-django-production-6256.up.railway.app/api/orders/cart/`,{
+                    const res = await fetch(`${userApi}getBasket`,{
                         method : "GET" , 
                         headers :{
                             "Content-Type": "application/json",
@@ -28,14 +57,19 @@ export default function PurchaseOrder() {
                         }
     
                     })
-                    setdata(await res.json()) ; 
+                    const data = await res.json();
+                    if (Array.isArray(data.basketItem)) {
+                        setdata(data.basketItem as basketItem[]); // Ensure data is an array of CartItem
+                    } else {
+                        setdata([]);
+                    }
     
                 }
                 fetchData() ;
             }
         },[token])
     const tongtien: number = dataOrder.reduce((sum, items) => {
-        return sum + (items.price-items.price*items.discount/100) *items.qty ;
+        return sum + (items.product.price-items.product.price*items.product.discount/100) *items.quantity ;
     }, 0);
     const [Alert,setAlert] = useState(false)
     const router = useRouter();
@@ -46,31 +80,33 @@ export default function PurchaseOrder() {
         const form = e.target as HTMLFormElement;
         const user = form.user.value; 
         const address = form.address.value;
+        const numberPhone = form.numberPhone.value;
+        const note_ship = form.note_ship.value;
+        const note_quan = form.note_quan.value;
+
         setAlert(true);
         setProgress(0);
         if(token)
         {
             
             const BuyProduct = async () =>{
-                const res = await fetch("https://ecommerce-django-production-6256.up.railway.app/api/orders/makeorder/",{
+                const res = await fetch(`${userApi}buyBasket`,{
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`
                     },
                     body: JSON.stringify({
-                    paymentMethod: "cash" ,
-                    taxPrice: 20 , 
-                    shippingPrice: 20, 
-                    totalPrice:tongtien  , 
-                    shippingAddress : {
-                        address: address,
-                        city : "Ha Noi" , 
-                        postalCode: "lololo" ,
-                        country: "vn" ,
-                    } , 
-                    receiver: user 
-        })
+                    note: note_quan,   
+                    shipping : 
+                    {
+                        receiver : user , 
+                        phone_Receiver : numberPhone , 
+                        address_receiver : address , 
+                        note: note_ship ,
+                        
+                    }
+                })
                 }
                 )
                 const data = await res.json();
@@ -113,7 +149,7 @@ export default function PurchaseOrder() {
                     <form action="" className="flex gap-[24px] mt-[48px]" onSubmit={hanldeBuyProduct}>
                         <div className="w-[60%] px-[32px] py-[24px] border-[1px] border-[#EDEDED] flex flex-col gap-[32px]">
                             <div className="flex flex-col gap-[8px]">
-                                <label htmlFor="user" className="text-[20px] text-[#0C0C0C] font-[500]">User</label>
+                                <label htmlFor="user" className="text-[20px] text-[#0C0C0C] font-[500]">Người Nhận</label>
                                 <input type="text" name="user" id="user" className="h-[48px] bg-[#F9F9F9] border-[1px] border-[#F6F6F6] rounded-[8px] px-[15px]" placeholder="Nhập tên người nhận" required />
                             </div>
                             <div className="flex flex-col gap-[8px]">
@@ -124,6 +160,15 @@ export default function PurchaseOrder() {
                                 <label htmlFor="numberPhone text-[20px] text-[#0C0C0C] font-[500] ">Số Điện Thoại</label>
                                 <input type="tel" id="numberPhone" name="numberPhone" pattern="[0]{1}[0-9]{9}" placeholder="0-123-456-789" className="h-[48px] bg-[#F9F9F9] border-[1px] border-[#F6F6F6] rounded-[8px] px-[15px]" />
                             </div>
+                             <div className="flex flex-col gap-[8px]">
+                                <label htmlFor="note_quan" className="text-[20px] text-[#0C0C0C] font-[500]">ghi chú cho quán </label>
+                                <input type="text" name="note_quan" id="note_quan" className="h-[48px] bg-[#F9F9F9] border-[1px] border-[#F6F6F6] rounded-[8px] px-[15px]" placeholder="note cho quan" required />
+                            </div>
+                             <div className="flex flex-col gap-[8px]">
+                                <label htmlFor="note_ship" className="text-[20px] text-[#0C0C0C] font-[500]">ghi chú cho shipper</label>
+                                <input type="text" name="note_ship" id="note_ship" className="h-[48px] bg-[#F9F9F9] border-[1px] border-[#F6F6F6] rounded-[8px] px-[15px]" placeholder="note cho nguoi van chuyen" required />
+                            </div>
+                            
                          </div>
                         <div className="w-[40%] px-[24px] py-[24px]">
                             <h2 className="font-[500] text-[#0C0C0C] text-[24px]">Your Order</h2>
@@ -134,21 +179,21 @@ export default function PurchaseOrder() {
                                             <>
                                                 <div className="productItem flex px-[6px] border-b-[1px] border-b-[#CBCBCB] gap-[10px]">
                                                     <div className="image w-[30%]">
-                                                        <img src={items.image} alt=""  className="w-[100%]"/>
+                                                        <img src={items.product.images[0]?.image} alt=""  className="w-[100%]"/>
                                                     </div>
                                                     <div className="flex flex-col gap-[23px]  text-[17px] font-[300] text-[#2D2D2D] w-[70%]">
                                                         <h2>
                                                             <div className="title font-[500] text-[20px]">
-                                                                {items.name} 
+                                                                {items.product.name} 
                                                             </div>
                                                             <div className="color_quantity ">
                                                                 <div className="">Black</div>
-                                                                <div className="quantity">x {items.qty}</div>
+                                                                <div className="quantity">x {items.quantity}</div>
                                                             </div>
                                                         </h2>
                                                         <div className="flex justify-between">
-                                                            <div className="text-pink-600 text-[20px]">{items.discount}%</div>
-                                                            <div className="price text-[20px] font-[500] text-red-600 ">{items.price} $</div>
+                                                            <div className="text-pink-600 text-[20px]">{items.product.discount}%</div>
+                                                            <div className="price text-[20px] font-[500] text-red-600 ">{items.product.price} $</div>
                                                         </div>
                                                         
 
