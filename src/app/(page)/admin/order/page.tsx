@@ -10,7 +10,7 @@ type statusType = 'pending' | 'shipped' | 'delivered' | 'cancelled';
 type statusConfigType = {
   [key in statusType]: {
     label: string;
-    icon: React.ComponentType<any>;
+    icon: React.ComponentType<{ className?: string }>;
     color: string;
     nextStatus: statusType | null;
     nextLabel: string | null;
