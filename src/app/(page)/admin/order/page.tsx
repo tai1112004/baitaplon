@@ -4,59 +4,67 @@ import { Package, Truck, CheckCircle, XCircle, Eye, Calendar, User, MapPin, Cred
 import { useEffect } from 'react';
 import { adminApi } from '../../../../../lib/api';
 import { getCookie } from '@/app/function/GetCookie/GetCookie';
+
 type statusType = 'pending' | 'shipped' | 'delivered' | 'cancelled';
+
 type statusConfigType = {
   [key in statusType]: {
     label: string;
-    icon: React.ComponentType;
+    icon: React.ComponentType<any>;
     color: string;
     nextStatus: statusType | null;
     nextLabel: string | null;
   };
 }
-type orderType = {
-  id?:number ,
-  order_Date?: string,
-  total_price?: number,
-  note?: string,
-  status?: string,
-  shipping?: shippingType,
-  user?: userType,
-  orderDetails?: orderDetailsType[],
-}
-type shippingType ={
-  id?: number,
-  receiver?: string,
-  phone_Receiver?: string,
-  address_receiver?: string,
-  isDelivery?: boolean,
-  note?: string,
-}
-type userType = {
-  id?: number,
-  name?: string,
-  email?: string,
-  role?: string,
-}
-type orderDetailsType = {
-  id?: number,
-  quantity?: number,
-  price?: number,
-  note?: string,
-  product?: productType,
-}
-type productType ={
-  id?: number,
-  name?: string,
-  price?: number,
 
+type orderType = {
+  id?: number;
+  order_Date?: string;
+  total_price?: number;
+  note?: string;
+  status?: string;
+  shipping?: shippingType;
+  user?: userType;
+  orderDetails?: orderDetailsType[];
 }
+
+type shippingType = {
+  id?: number;
+  receiver?: string;
+  phone_Receiver?: string;
+  address_receiver?: string;
+  isDelivery?: boolean;
+  note?: string;
+}
+
+type userType = {
+  id?: number;
+  name?: string;
+  email?: string;
+  role?: string;
+}
+
+type orderDetailsType = {
+  id?: number;
+  quantity?: number;
+  price?: number;
+  note?: string;
+  product?: productType;
+}
+
+type productType = {
+  id?: number;
+  name?: string;
+  price?: number;
+}
+
 const OrderManagement = () => {
   const [activeTab, setActiveTab] = useState('pending');
   const [selectedOrder, setSelectedOrder] = useState<orderType | null>(null);
   const [orders, setOrders] = useState<orderType[]>([]);
   const getToken = getCookie('token');
-  const statusConfig:statusConfigType = {
+
+  const statusConfig: statusConfigType = {
     pending: { 
       label: 'Chưa xử lý', 
       icon: Package, 
@@ -86,9 +94,10 @@ const OrderManagement = () => {
       nextLabel: null
     }
   };
+
   useEffect(() => {
     const fetchOrders = async () => {
-      const respose = await fetch(`${adminApi}listUser/status/${activeTab}`,{
+      const respose = await fetch(`${adminApi}listUser/status/${activeTab}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -99,27 +108,29 @@ const OrderManagement = () => {
       setOrders(data);
     }
     fetchOrders();
-    console.log(orders);
-  },[activeTab])
-  const updateStatus = async (orderId:number, newStatus: string) => {
-      await fetch(`${adminApi}changeStatus?nameStatus=${newStatus}&id=${orderId}`, {
+  }, [activeTab, getToken])
+
+  const updateStatus = async (orderId: number, newStatus: string) => {
+    await fetch(`${adminApi}changeStatus?nameStatus=${newStatus}&id=${orderId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${getToken}`
       }
-  }) 
+    }) 
   }
+
   const filteredOrders = orders.filter(order => order.status === activeTab);
 
-  const formatCurrency = (amount : number) => {
+  const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
       currency: 'VND'
     }).format(amount);
   };
 
-  const updateOrderStatus = (orderId:number, newStatus: string) => {
+  const updateOrderStatus = (orderId: number, newStatus: string) => {
+    if (!orderId) return;
     updateStatus(orderId, newStatus);
     setOrders(orders.map(order => 
       order.id === orderId ? { ...order, status: newStatus } : order
@@ -127,7 +138,7 @@ const OrderManagement = () => {
     setSelectedOrder(prev => prev ? { ...prev, status: newStatus } : null);
   };
 
-  const OrderCard = ({ order} : {order: orderType}) => {
+  const OrderCard = ({ order }: { order: orderType }) => {
     const StatusIcon = statusConfig[(order.status ?? 'pending') as statusType].icon;
     
     return (
@@ -150,7 +161,7 @@ const OrderManagement = () => {
             <Calendar className="w-4 h-4 inline mr-1" />
             {order.order_Date}
           </p>
-          <p className="text-xl font-bold text-gray-900">{formatCurrency(order.total_price?order.total_price:0)}</p>
+          <p className="text-xl font-bold text-gray-900">{formatCurrency(order.total_price ?? 0)}</p>
         </div>
         
         <button
@@ -250,14 +261,19 @@ const OrderManagement = () => {
               {canChangeStatus && (
                 <div className="flex gap-3">
                   <button
-                    onClick={() => updateOrderStatus(order.id, statusConfig[(order.status ?? 'pending') as statusType].nextStatus )}
+                    onClick={() => {
+                      const nextStatus = statusConfig[(order.status ?? 'pending') as statusType].nextStatus;
+                      if (nextStatus) {
+                        updateOrderStatus(order.id ?? 0, nextStatus);
+                      }
+                    }}
                     className="flex-1 bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors font-medium"
                   >
                     {statusConfig[(order.status ?? 'pending') as statusType].nextLabel}
                   </button>
                   {order.status === 'pending' && (
                     <button
-                      onClick={() => updateOrderStatus(order.id, 'cancelled')}
+                      onClick={() => updateOrderStatus(order.id ?? 0, 'cancelled')}
                       className="flex-1 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors font-medium"
                     >
                       Hủy đơn hàng
