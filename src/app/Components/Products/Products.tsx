@@ -153,11 +153,10 @@ export const Products = ({data_products}: Props) => {
     }, [products, data_products]);
      
     const handleClickTransferPage = useCallback((id:number , category:string) => {
-        let url:string  ;
-        url = `/products/${category}/${id}`;
+        
         setLoading(true);
         setTimeout(() => {
-            router.push(url) ; 
+            router.push(`/products/${category}/${id}`) ; 
         }, 1000);
     }, [router,setLoading]);
     useEffect(() => {
@@ -251,6 +250,7 @@ export const Products = ({data_products}: Props) => {
                 }));
             }
         }
+        console.log(filters)
            
             
     };

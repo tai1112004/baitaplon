@@ -37,7 +37,7 @@ type imageType = {
     image: string ; 
 }
 
-export default  function mobilePage() {
+export default  function MobilePage() {
     const [product, setproduct] = useState<data[]>([]); 
     useEffect(() => {
   const data_product = async () => {

@@ -94,13 +94,11 @@ export const Section3 = () => {
     // };
 
     const handleTranferPage = (id: number, category: string) => {
-        let url: string;
         
-        url = `/products/${category}/${id}`;
         
         setLoading(true);
         setTimeout(() => {
-            router.push(url);
+            router.push(`/products/${category}/${id}`);
             setLoading(false);
         }, 2000);
     };

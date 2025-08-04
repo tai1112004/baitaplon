@@ -194,15 +194,15 @@ export const Header = () => {
         }
      }
      const handleClickTranferPageDetail = useCallback((id:number , category:string) => {
-        let url:string  ;
+        // let url:string  ;
         
-        url = `/products/${category}/${id}` ;
+        // url = `/products/${category}/${id}` ;
         
         setTimeout(() => {
-            if(pathname !== url)
+            if(pathname !== `/products/${category}/${id}`)
             {
                 setloading(true);
-                router.push(url) ;
+                router.push(`/products/${category}/${id}`) ;
             }
              
         }, 1000);

@@ -75,11 +75,10 @@ export const Sanphamlienquan = ({data_products}:props) => {
             }
         }, [product, data_products]);
         const handleTranferPage = (id:number , category:string) =>{
-        let url:string  ;
-        url = `/products/${category}/${id}` ;
+        
         setloading(true) ; 
         setTimeout(() => {
-            router.push(url) ; 
+            router.push(`/products/${category}/${id}`) ; 
             setloading(false) ; 
         }, 2000);
         }
