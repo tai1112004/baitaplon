@@ -6,7 +6,15 @@ import { adminApi, generalApi } from '../../../../../lib/api';
 import { getCookie } from '@/app/function/GetCookie/GetCookie';
 type userType = 
 {
-  id: number ; 
+  id: number; 
+  name: string;
+  email: string;
+  role: string;
+  password?: string;
+}
+
+type newUserType = 
+{
   name: string;
   email: string;
   role: string;
@@ -16,7 +24,7 @@ const UserManagement = () => {
   const [users, setUsers] = useState<userType[]>([]);
   const token = getCookie('token');
   const [showModal, setShowModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<userType>();
+  const [selectedUser, setSelectedUser] = useState<userType | undefined>();
   const [newUser, setNewUser] = useState<userType>({ id: 0, name: '', email: '', role: 'USER' });
   const [isEditing, setIsEditing] = useState(false);
 
@@ -85,7 +93,7 @@ const registerUser = async (user:userType) => {
     if (newUser.name && newUser.email) {
       registerUser(newUser);
       setUsers([...users, { ...newUser}]);
-      setNewUser({ name: '', email: '', role: 'USER' });
+      setNewUser({ id: 0, name: '', email: '', role: 'USER' });
       setShowModal(false);
     }
   };
@@ -111,7 +119,7 @@ const registerUser = async (user:userType) => {
 
   // Mở modal để thêm mới
   const openAddModal = () => {
-    setNewUser({ name: '', email: '', role: 'USER' });
+    setNewUser({ id: 0, name: '', email: '', role: 'USER' });
     setIsEditing(false);
     setShowModal(true);
   };
@@ -260,9 +268,9 @@ const registerUser = async (user:userType) => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Họ Tên</label>
                   <input
                     type="text"
-                    value={isEditing ? selectedUser?.name ?? '' : newUser.name}
+                    value={isEditing ? (selectedUser?.name || '') : newUser.name}
                     onChange={(e) => isEditing 
-                      ? setSelectedUser({...selectedUser, name: e.target.value})
+                      ? setSelectedUser(selectedUser ? {...selectedUser, name: e.target.value} : undefined)
                       : setNewUser({...newUser, name: e.target.value})
                     }
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -274,9 +282,9 @@ const registerUser = async (user:userType) => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
                   <input
                     type="email"
-                    value={isEditing ? selectedUser?.email ?? '' : newUser.email}
+                    value={isEditing ? (selectedUser?.email || '') : newUser.email}
                     onChange={(e) => isEditing 
-                      ? setSelectedUser({...selectedUser, email: e.target.value})
+                      ? setSelectedUser(selectedUser ? {...selectedUser, email: e.target.value} : undefined)
                       : setNewUser({...newUser, email: e.target.value})
                     }
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
