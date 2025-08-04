@@ -6,19 +6,18 @@ import { adminApi, generalApi } from '../../../../../lib/api';
 import { getCookie } from '@/app/function/GetCookie/GetCookie';
 type userType = 
 {
-  id?: number ; 
-  name?: string;
-  email?: string;
-  role?: string;
+  id: number ; 
+  name: string;
+  email: string;
+  role: string;
   password?: string;
-
 }
 const UserManagement = () => {
   const [users, setUsers] = useState<userType[]>([]);
   const token = getCookie('token');
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<userType>();
-  const [newUser, setNewUser] = useState<userType>({ name: '', email: '', role: 'USER' });
+  const [newUser, setNewUser] = useState<userType>({ id: 0, name: '', email: '', role: 'USER' });
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
